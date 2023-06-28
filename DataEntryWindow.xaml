@@ -1,0 +1,8 @@
+﻿<Window x:Class="PhotoOrg.DataEntryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Data Entry Window" Height="300" Width="400">
+    <Grid Background="#2c2f36" RenderTransformOrigin="0.508,0.503">
+        <!-- Add your desired controls, text boxes, and search functionality here -->
+    </Grid>
+</Window>
