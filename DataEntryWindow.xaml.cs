@@ -15,13 +15,18 @@ using System.Windows.Shapes;
 namespace PhotoOrg
 {
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    /// Interaction logic for DataEntryWindow.xaml
     /// </summary>
     public partial class DataEntryWindow : Window
     {
-        public DataEntryWindow()
+        String path;
+        public DataEntryWindow(String path)
         {
             InitializeComponent();
+            this.path = path;
+            MessageBox.Show(path);
         }
+
+
     }
 }

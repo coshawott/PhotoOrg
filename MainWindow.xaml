@@ -19,15 +19,27 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Image Source="{Binding Path}" Width="100" Height="100" Margin="5" />
+                            <Button Click="Thumbnail_Click"  Width="100" Height="100" Margin="5" Opacity="100" Foreground="{x:Null}" Background="{x:Null}" BorderBrush="{x:Null}"
+                                    Tag="{Binding Path}">
+                                <Image Source="{Binding Path}" Width="100" Height="100" Margin="5" />
+                                <Button.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Edit" Click="Edit_Click" Tag="{Binding Path}"/>
+                                        <MenuItem Header="Open" Click="Open_Click" Tag="{Binding Path}"/>
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                            </Button>
+                            
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-            <Button Content="&gt;&gt;&gt;" Click="Next_Click" HorizontalAlignment="Left" Margin="400,20,0,0" VerticalAlignment="Top"/>
+            <Button Content="&gt;&gt;&gt;" Click="Next_Click" HorizontalAlignment="Center" Margin="36,20,0,0" VerticalAlignment="Top"/>
+            <TextBox HorizontalAlignment="Right" Margin="0,12,50,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="300"/>
         </Grid>
-        <Button Content="&lt;&lt;&lt;" Click="Prev_Click"  HorizontalAlignment="Left" Margin="370,20,0,0" VerticalAlignment="Top"/>
-        <TextBlock x:Name ="Page_Number" TextWrapping="Wrap" Text="Page 0/0" Margin="0,7,0,0" Height="20" VerticalAlignment="Top" Foreground="White" HorizontalAlignment="Center"/>
+        <Button Content="&lt;&lt;&lt;" Click="Prev_Click"  HorizontalAlignment="Center" Margin="0,20,40,0" VerticalAlignment="Top"/>
+        <TextBlock x:Name ="Page_Number" TextWrapping="Wrap" Text="Page 0/0" Height="20" VerticalAlignment="Top" Foreground="White" HorizontalAlignment="Center"/>
         <Button Content="Search" Click="Search_Menu_Click" RenderTransformOrigin="0.506,-2.202" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,12,10,0"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="6" Margin="-121,122,0,0" VerticalAlignment="Top" Width="11"/>
     </Grid>
 </Window>

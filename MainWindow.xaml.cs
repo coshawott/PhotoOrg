@@ -7,6 +7,8 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Windows.Controls;
+
 namespace PhotoOrg
 {
     /// <summary>
@@ -121,8 +123,33 @@ namespace PhotoOrg
 
         private void Search_Menu_Click(object sender, RoutedEventArgs e)
         {
-            DataEntryWindow dataEntryWindow = new DataEntryWindow();
-            dataEntryWindow.ShowDialog();
+            MessageBox.Show("Erm,,, what the spruce");
+                
+        }
+
+        private void Thumbnail_Click(object sender, RoutedEventArgs e)
+        {
+            
+            Button button = sender as Button;
+            string path = button.Tag.ToString();
+            //replace the MessageBox with displaying the image
+            MessageBox.Show(path);
+        }
+
+
+        private void Edit_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            string path = menuItem.Tag.ToString();
+            DataEntryWindow entryWindow = new DataEntryWindow(path);
+            entryWindow.ShowDialog();
+        }
+
+        private void Open_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            string path = menuItem.Tag.ToString();
+            MessageBox.Show(path);
         }
     }
 }
