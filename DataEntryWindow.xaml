@@ -9,9 +9,16 @@
         <TextBlock TextWrapping="Wrap" Text="First Name:" Margin="10" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBlock TextWrapping="Wrap" Text="Last Name:" Margin="10,56,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBlock TextWrapping="Wrap" Text="Country:" Margin="10,102,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBlock TextWrapping="Wrap" Text="State:" Margin="10,148,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBlock TextWrapping="Wrap" Text="City:" Margin="10,194,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock TextWrapping="Wrap" Text="City:" Margin="10,148,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock TextWrapping="Wrap" Text="Caption:" Margin="10,194,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBlock TextWrapping="Wrap" Text="Event:" Margin="10,240,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox x:Name="FirstName" HorizontalAlignment="Left" Margin="175,10,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="200" Height="18"/>
+        <TextBox x:Name="LastName" HorizontalAlignment="Left" Margin="175,56,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="200" Height="18"/>
+        <TextBox x:Name="Country" HorizontalAlignment="Left" Margin="175,102,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="200" Height="18"/>
+        <TextBox x:Name="City" HorizontalAlignment="Left" Margin="175,148,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="200" Height="18"/>
+        <TextBox x:Name="Caption" HorizontalAlignment="Left" Margin="175,194,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="200" Height="18"/>
+        <TextBox x:Name="Event" HorizontalAlignment="Left" Margin="175,240,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="200" Height="18"/>
+        <Button Content="Write Data" Click="WriteToImage" HorizontalAlignment="Left" Height="22" Margin="10,350,0,0" VerticalAlignment="Top" Width="62"/>
 
     </Grid>
 </Window>

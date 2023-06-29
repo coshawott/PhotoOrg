@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Controls;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
 
 namespace PhotoOrg
 {
@@ -123,8 +125,11 @@ namespace PhotoOrg
 
         private void Search_Menu_Click(object sender, RoutedEventArgs e)
         {
+            //temp shit
             MessageBox.Show("Erm,,, what the spruce");
-                
+            return;
+            //actual code
+            //used https://aaronbos.dev/posts/iptc-metadata-csharp-imagesharp for help
         }
 
         private void Thumbnail_Click(object sender, RoutedEventArgs e)
@@ -132,8 +137,8 @@ namespace PhotoOrg
             
             Button button = sender as Button;
             string path = button.Tag.ToString();
-            //replace the MessageBox with displaying the image
-            MessageBox.Show(path);
+            DisplayWindow dispWindow = new DisplayWindow(path);
+            dispWindow.Show();
         }
 
 
@@ -149,7 +154,8 @@ namespace PhotoOrg
         {
             MenuItem menuItem = sender as MenuItem;
             string path = menuItem.Tag.ToString();
-            MessageBox.Show(path);
+            DisplayWindow dispWindow = new DisplayWindow(path);
+            dispWindow.Show();
         }
     }
 }

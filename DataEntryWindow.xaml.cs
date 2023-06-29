@@ -11,6 +11,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
+using Image = SixLabors.ImageSharp.Image;
 
 namespace PhotoOrg
 {
@@ -19,13 +22,27 @@ namespace PhotoOrg
     /// </summary>
     public partial class DataEntryWindow : Window
     {
-        String path;
-        public DataEntryWindow(String path)
+        private string path;
+        private Image image;
+        public DataEntryWindow(string path)
         {
             InitializeComponent();
             this.path = path;
+            image = Image.Load(path);
             MessageBox.Show(path);
         }
+
+        private void WriteToImage(object sender, RoutedEventArgs e)
+        {
+        
+            if (image.Metadata.IptcProfile == null)
+            {
+                image.Metadata.IptcProfile = new IptcProfile();
+            }
+            MessageBox.Show("erm what the spruce");
+            Close();
+            
+        } 
 
 
     }
