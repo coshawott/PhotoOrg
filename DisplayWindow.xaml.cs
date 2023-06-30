@@ -30,7 +30,6 @@ namespace PhotoOrg
             bitimg.EndInit();
             DispWindow.Title = path;
             DispImage.Source = bitimg;
-            //TODO: Dynamically resize the image based on the window dimensions
             
         }
     }

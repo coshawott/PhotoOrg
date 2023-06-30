@@ -7,8 +7,8 @@
         xmlns:local="clr-namespace:PhotoOrg"
         mc:Ignorable="d"
         Title="Window1" Height="450" Width="800">
-    <Grid>
-        <Image x:Name ="DispImage" Height="100" Width="100"/>
+    <Grid Background="#2c2f36">
+        <Image x:Name ="DispImage" Height="{Binding ElementName=DispWindow, Path=ActualHeight}" Width="{Binding ElementName=DispWindow, Path=ActualWidth}" HorizontalAlignment="Left"/>
 
     </Grid>
 </Window>

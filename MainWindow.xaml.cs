@@ -8,19 +8,42 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Controls;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace PhotoOrg
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IDisposable
     {
         public ObservableCollection<Photo> Photos { get; set; }
         private int PageSize = 50;
-        private int currentPageIndex = 0;
+        public int currentPageIndex = 0;
+        private bool disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose of any managed resources here
+                    Photos.Clear();
+                }
+
+                // Dispose of any unmanaged resources here
+
+                disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         public MainWindow()
         {
@@ -83,22 +106,91 @@ namespace PhotoOrg
             return PhotoPath;
         }
 
-        private void InitThumbnails(List<string> PhotoPaths)
+        private void InitThumbnails(List<string> photoPaths)
         {
             int startIndex = currentPageIndex * PageSize;
-            int endIndex = Math.Min(startIndex + PageSize, PhotoPaths.Count);
+            int endIndex = Math.Min(startIndex + PageSize, photoPaths.Count);
             Photos.Clear();
+
             for (int i = startIndex; i < endIndex; i++)
             {
-                Photos.Add(new Photo { Path = PhotoPaths[i] });
+                string path = photoPaths[i];
+
+                // Load the image using System.Drawing.Image
+                using (System.Drawing.Image image = System.Drawing.Image.FromFile(path))
+                {
+                    // Generate a thumbnail of size 100x100 pixels
+                    System.Drawing.Image thumbnail = image.GetThumbnailImage(100, 100, null, IntPtr.Zero);
+
+                    // Create a WPF Image control to display the thumbnail
+                    System.Windows.Controls.Image wpfImage = new System.Windows.Controls.Image();
+                    wpfImage.Source = ConvertToBitmapImage(thumbnail);
+
+                    // Add the photo to your collection
+                    Photos.Add(new Photo(path) { Thumbnail = wpfImage });
+                }
             }
         }
-        
 
-        public class Photo
+
+        private BitmapImage ConvertToBitmapImage(System.Drawing.Image image)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            image.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
+
+            BitmapImage bitmapImage = new BitmapImage();
+            bitmapImage.BeginInit();
+            bitmapImage.StreamSource = new MemoryStream(memoryStream.ToArray());
+            bitmapImage.EndInit();
+            memoryStream.Dispose();
+
+            return bitmapImage;
+        }
+
+
+        public class Photo : IDisposable
         {
             public string Path { get; set; }
+            public System.Windows.Controls.Image Thumbnail { get; set; }
+
+            public Photo(string path)
+            {
+                Path = path;
+
+                using (System.Drawing.Image image = System.Drawing.Image.FromFile(path))
+                {
+                    // Generate a thumbnail of size 100x100 pixels
+                    System.Drawing.Image thumbnail = image.GetThumbnailImage(100, 100, null, IntPtr.Zero);
+
+                    // Create a WPF Image control to display the thumbnail
+                    Thumbnail = new System.Windows.Controls.Image();
+                    Thumbnail.Source = ConvertToBitmapImage(thumbnail);
+                }
+            }
+
+            private BitmapImage ConvertToBitmapImage(System.Drawing.Image image)
+            {
+                MemoryStream memoryStream = new MemoryStream();
+                image.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
+
+                BitmapImage bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+                bitmapImage.StreamSource = new MemoryStream(memoryStream.ToArray());
+                bitmapImage.EndInit();
+                memoryStream.Dispose();
+
+                return bitmapImage;
+            }
+
+            public void Dispose()
+            {
+                Thumbnail?.SetCurrentValue(System.Windows.Controls.Image.SourceProperty, null);
+            }
+
         }
+
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
