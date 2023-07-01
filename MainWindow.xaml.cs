@@ -79,7 +79,7 @@ namespace PhotoOrg
                     }
                 }
             }
-            
+
             return PhotoPath;
         }
 
@@ -93,7 +93,7 @@ namespace PhotoOrg
                 Photos.Add(new Photo { Path = PhotoPaths[i] });
             }
         }
-        
+
 
         public class Photo
         {
@@ -103,13 +103,13 @@ namespace PhotoOrg
         private void Next_Click(object sender, RoutedEventArgs e)
         {
             List<string> photos = GetPhotos(Properties.Settings.Default.FolderLocation);
-            
-            if (currentPageIndex < photos.Count/PageSize)
+
+            if (currentPageIndex < photos.Count / PageSize)
             {
                 currentPageIndex++;
                 InitThumbnails(photos);
             }
-            Page_Number.Text = (currentPageIndex + 1  + "/" + ((photos.Count / PageSize) + 1) );
+            Page_Number.Text = (currentPageIndex + 1 + "/" + ((photos.Count / PageSize) + 1));
         }
 
         private void Prev_Click(object sender, RoutedEventArgs e)
@@ -120,7 +120,7 @@ namespace PhotoOrg
                 currentPageIndex--;
                 InitThumbnails(photos);
             }
-            Page_Number.Text = (currentPageIndex + 1 + "/" + ((photos.Count / PageSize) + 1) );
+            Page_Number.Text = (currentPageIndex + 1 + "/" + ((photos.Count / PageSize) + 1));
         }
 
         private void Search_Menu_Click(object sender, RoutedEventArgs e)
@@ -134,7 +134,7 @@ namespace PhotoOrg
 
         private void Thumbnail_Click(object sender, RoutedEventArgs e)
         {
-            
+
             Button button = sender as Button;
             string path = button.Tag.ToString();
             DisplayWindow dispWindow = new DisplayWindow(path);
