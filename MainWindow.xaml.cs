@@ -147,7 +147,8 @@ namespace PhotoOrg
             MenuItem menuItem = sender as MenuItem;
             string path = menuItem.Tag.ToString();
             DataEntryWindow entryWindow = new DataEntryWindow(path);
-            entryWindow.ShowDialog();
+            entryWindow.Show();
+            Close();
         }
 
         private void Open_Click(object sender, RoutedEventArgs e)
