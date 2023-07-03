@@ -15,7 +15,8 @@ namespace PhotoOrg
     public partial class DataEntryWindow : Window, IDisposable
     {
         private string path;
-        private Image<Rgb24> image;
+        public Image<Rgb24> image;
+         
 
         public DataEntryWindow(string path)
         {
@@ -25,12 +26,14 @@ namespace PhotoOrg
             using (var tempImage = Image.Load<Rgb24>(path).Clone())
             {
                 image = tempImage.Clone();
+                tempImage.Dispose();
             }
 
             EntWindow.Title = path;
         }
 
         private void WriteToImage(object sender, RoutedEventArgs e)
+        //rewrite this method so that instead of saving the file here, it passes image to the main window and saves it there
         {
             if (image.Metadata.IptcProfile == null)
             {
@@ -38,33 +41,12 @@ namespace PhotoOrg
             }
 
             image.Metadata.IptcProfile.SetValue(IptcTag.Keywords, LastName.Text + "." + FirstName.Text);
-
-            if (path.EndsWith(".png"))
-            {
-                using (var fileStream = System.IO.File.OpenWrite(path))
-                {
-                    image.Save(fileStream, new PngEncoder());
-                }
-            }
-            else if (path.EndsWith(".jpg") || path.EndsWith(".jpeg"))
-            {
-                using (var fileStream = System.IO.File.OpenWrite(path))
-                {
-                    image.Save(fileStream, new JpegEncoder());
-                }
-            }
-            else if (path.EndsWith(".gif"))
-            {
-                using (var fileStream = System.IO.File.OpenWrite(path))
-                {
-                    image.Save(fileStream, new GifEncoder());
-                }
-            }
-
+            GLOBALS.image = image.Clone();
+            GLOBALS.initialOpen = false;
+            GLOBALS.path = path;
             MessageBox.Show("erm what the spruce");
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-            Close();
+            
+            
         }
 
         public void Dispose()

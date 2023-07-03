@@ -10,6 +10,10 @@ using System.Drawing.Imaging;
 using System.Windows.Controls;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
+using SixLabors.ImageSharp.Formats.Gif;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace PhotoOrg
 {
@@ -21,6 +25,7 @@ namespace PhotoOrg
         public ObservableCollection<Photo> Photos { get; set; }
         private int PageSize = 50;
         private int currentPageIndex = 0;
+        Image<Rgb24> image = null;
 
         public MainWindow()
         {
@@ -144,11 +149,40 @@ namespace PhotoOrg
 
         private void Edit_Click(object sender, RoutedEventArgs e)
         {
+            
             MenuItem menuItem = sender as MenuItem;
             string path = menuItem.Tag.ToString();
-            DataEntryWindow entryWindow = new DataEntryWindow(path);
-            entryWindow.Show();
-            Close();
+            DataEntryWindow? entryWindow = new DataEntryWindow(path);
+            //entryWindow.Show();
+            var result = entryWindow.ShowDialog();
+            //if (result == DialogResult.Equals(true))
+            //{
+                MessageBox.Show("Dialog = true!!!");
+                this.image = GLOBALS.image;
+                entryWindow.Close();
+                entryWindow.Dispose();
+                if (path.EndsWith(".png"))
+                {
+                    using (var fileStream = System.IO.File.OpenWrite(path))
+                    {
+                        image.Save(fileStream, new PngEncoder());
+                    }
+                }
+                else if (path.EndsWith(".jpg") || path.EndsWith(".jpeg"))
+                {
+                    using (var fileStream = System.IO.File.OpenWrite(path))
+                    {
+                        image.Save(fileStream, new JpegEncoder());
+                    }
+                }
+                else if (path.EndsWith(".gif"))
+                {
+                    using (var fileStream = System.IO.File.OpenWrite(path))
+                    {
+                        image.Save(fileStream, new GifEncoder());
+                    }
+                }
+            //}
         }
 
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -158,5 +192,14 @@ namespace PhotoOrg
             DisplayWindow dispWindow = new DisplayWindow(path);
             dispWindow.Show();
         }
+
+        private void ViewMeta_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            string path = menuItem.Tag.ToString();
+            MetaWindow metaWindow = new MetaWindow(path);
+            metaWindow.Show();
+        }
+
     }
 }

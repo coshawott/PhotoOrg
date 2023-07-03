@@ -1,7 +1,8 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp;
-using System;
-using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -10,18 +11,20 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp;
 
 namespace PhotoOrg
 {
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class DisplayWindow : Window
+    public partial class MetaWindow : Window
     {
-        string path;
+        String path;
         public Image<Rgb24> image;
-        public DisplayWindow(string path)
-        {
+        public MetaWindow(string path)
+        {           
             InitializeComponent();
             this.path = path;
             using (var tempImage = SixLabors.ImageSharp.Image.Load<Rgb24>(path).Clone())
@@ -33,11 +36,9 @@ namespace PhotoOrg
             bitimg.BeginInit();
             bitimg.UriSource = new Uri(path);
             bitimg.EndInit();
-            DispWindow.Title = path;
-            DispImage.Source = bitimg;
-            
+            PreviewImage.Source = bitimg;
+            MetadataReader metadataReader = new MetadataReader(path);
+            MessageBox.Show(metadataReader.GetKeywords());
         }
     }
-   
 }
-

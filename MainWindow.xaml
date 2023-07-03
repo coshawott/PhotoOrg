@@ -22,10 +22,14 @@
                             <Button Click="Thumbnail_Click"  Width="100" Height="100" Margin="5" Opacity="100" Foreground="{x:Null}" Background="{x:Null}" BorderBrush="{x:Null}"
                                     Tag="{Binding Path}">
                                 <Image Source="{Binding Path}" Width="100" Height="100" Margin="5" />
+                                <Button.ToolTip>
+                                    <ToolTip Content="{Binding Path}" />
+                                </Button.ToolTip>
                                 <Button.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Header="Edit" Click="Edit_Click" Tag="{Binding Path}"/>
                                         <MenuItem Header="Open" Click="Open_Click" Tag="{Binding Path}"/>
+                                        <MenuItem Header="View Metadata" Click="ViewMeta_Click" Tag="{Binding Path}"/>
                                     </ContextMenu>
                                 </Button.ContextMenu>
                             </Button>
