@@ -6,6 +6,7 @@ using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace PhotoOrg
 {
@@ -23,11 +24,11 @@ namespace PhotoOrg
             InitializeComponent();
             this.path = path;
 
-            using (var tempImage = Image.Load<Rgb24>(path).Clone())
+            /*using (var tempImage = Image.Load<Rgb24>(path).Clone())
             {
                 image = tempImage.Clone();
                 tempImage.Dispose();
-            }
+            }*/
 
             EntWindow.Title = path;
         }
@@ -35,18 +36,22 @@ namespace PhotoOrg
         private void WriteToImage(object sender, RoutedEventArgs e)
         //rewrite this method so that instead of saving the file here, it passes image to the main window and saves it there
         {
-            if (image.Metadata.IptcProfile == null)
-            {
-                image.Metadata.IptcProfile = new IptcProfile();
-            }
-
-            image.Metadata.IptcProfile.SetValue(IptcTag.Keywords, LastName.Text + "." + FirstName.Text);
-            GLOBALS.image = image.Clone();
-            GLOBALS.initialOpen = false;
-            GLOBALS.path = path;
+   
+            //GLOBALS.image = image.Clone();
+            //GLOBALS.initialOpen = false;
+            //GLOBALS.path = path;
             MessageBox.Show("erm what the spruce");
-            
-            
+            using (Image image = Image.Load(path))
+            {
+                if (image.Metadata.IptcProfile == null)
+                {
+                    image.Metadata.IptcProfile = new IptcProfile();
+                }
+                image.Metadata.IptcProfile.SetValue(IptcTag.Keywords, LastName.Text + "." + FirstName.Text);
+                image.Save(path);
+            }
+            Close();
+
         }
 
         public void Dispose()

@@ -38,7 +38,13 @@ namespace PhotoOrg
             bitimg.EndInit();
             PreviewImage.Source = bitimg;
             MetadataReader metadataReader = new MetadataReader(path);
-            MessageBox.Show(metadataReader.GetKeywords());
+            City.Text = metadataReader.GetCity();
+            Country.Text = metadataReader.GetCountry();
+            Keywords.Text = metadataReader.GetKeywords();
+            Name.Text = metadataReader.GetName();
+
+            
+
         }
     }
 }

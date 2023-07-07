@@ -1,27 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+using System.Security.AccessControl;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace PhotoOrg
 {
-    class MetadataReader
+    class MetadataReader : IDisposable
     {
-        public Image<Rgb24> image;
-        public MetadataReader(string path) 
-        {
-            using (var tempImage = Image.Load<Rgb24>(path).Clone())
-            {
-                image = tempImage.Clone();
-                tempImage.Dispose();
-            }
+        private Image<Rgba32> image;
+        private string path;
+        private bool disposed = false;
 
+        public MetadataReader(string path)
+        {
+            this.image = Image.Load<Rgba32>(path);
+            this.path = path;
         }
 
         public string GetKeywords()
@@ -32,15 +28,186 @@ namespace PhotoOrg
                 string strKeywords = "";
                 foreach (var keyword in keywords)
                 {
-                    strKeywords += " " + keyword.Value;
+                    strKeywords += " \"" + keyword.Value + "\"";
                 }
                 return strKeywords;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                //Debug.WriteLine(ex);
                 return "null";
             }
+        }
+
+        public List<string> GetKeywordList()
+        {
+            try
+            {
+                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.Keywords);
+                List<string> strKeywords = new List<string>();
+                string actualStrKeywords = "";
+                foreach (var keyword in keywords)
+                {
+                    actualStrKeywords += " \"" + keyword.Value + "\"";
+                }
+                strKeywords.Add(actualStrKeywords);
+                return strKeywords;
+            }
+            catch (Exception ex)
+            {
+                //Debug.WriteLine(ex);
+                List<string> strKeywords = new List<string>();
+                strKeywords.Add("null");
+                return strKeywords;
+            }
+        }
+
+        public string GetCity()
+        {
+            try
+            {
+                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.City);
+                string strKeywords = "";
+                foreach (var keyword in keywords)
+                {
+                    strKeywords += " \"" + keyword.Value + "\"";
+                }
+                return strKeywords;
+            }
+            catch (Exception ex)
+            {
+                //Debug.WriteLine(ex);
+                return "null";
+            }
+        }
+
+        public List<string> GetCityList()
+        {
+            try
+            {
+                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.City);
+                List<string> strKeywords = new List<string>();
+                foreach (var keyword in keywords)
+                {
+                    strKeywords.Add(keyword.Value);
+                }
+                return strKeywords;
+            }
+            catch (Exception ex)
+            {
+                //Debug.WriteLine(ex);
+                List<string> strKeywords = new List<string>();
+                strKeywords.Add("null");
+                return strKeywords;
+            }
+        }
+
+        public string GetCountry()
+        {
+            try
+            {
+                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.Country);
+                string strKeywords = "";
+                foreach (var keyword in keywords)
+                {
+                    strKeywords += " \"" + keyword.Value + "\"";
+                }
+                return strKeywords;
+            }
+            catch (Exception ex)
+            {
+                //Debug.WriteLine(ex);
+                return "null";
+            }
+        }
+
+        public List<string> GetCountryList()
+        {
+            try
+            {
+                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.Keywords);
+                List<string> strKeywords = new List<string>();
+                foreach (var keyword in keywords)
+                {
+                    strKeywords.Add(keyword.Value);
+                }
+                return strKeywords;
+            }
+            catch (Exception ex)
+            {
+                //Debug.WriteLine(ex);
+                List<string> strKeywords = new List<string>();
+                strKeywords.Add("null");
+                return strKeywords;
+            }
+        }
+
+        public string GetName()
+        {
+            try
+            {
+                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.Name);
+                string strKeywords = "";
+                foreach (var keyword in keywords)
+                {
+                    strKeywords += " \"" + keyword.Value + "\"";
+                }
+                return strKeywords;
+            }
+            catch (Exception ex)
+            {
+                //Debug.WriteLine(ex);
+                return "null";
+            }
+        }
+
+        public List<string> GetNameList()
+        {
+            try
+            {
+                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.Keywords);
+                List<string> strKeywords = new List<string>();
+                foreach (var keyword in keywords)
+                {
+                    strKeywords.Add(keyword.Value);
+                }
+                return strKeywords;
+            }
+            catch (Exception ex)
+            {
+                //Debug.WriteLine(ex);
+                List<string> strKeywords = new List<string>();
+                strKeywords.Add("null");
+                return strKeywords;
+            }
+        }
+
+        // Implement IDisposable interface
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    // Clean up managed resources (if any)
+                }
+
+                // Clean up unmanaged resources (if any)
+                image?.Dispose();
+
+                disposed = true;
+            }
+        }
+
+        ~MetadataReader()
+        {
+            Dispose(false);
         }
     }
 }
