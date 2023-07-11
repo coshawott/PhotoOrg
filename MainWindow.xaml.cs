@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Image = System.Windows.Controls.Image;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PhotoOrg
 {
@@ -31,6 +32,7 @@ namespace PhotoOrg
         private int currentPageIndex = 0;
         Image<Rgb24>? image = null;
         List<List<List<string>>> searchProperties = new List<List<List<string>>>();
+        List<string> autofillText = new List<string>();
 
         public MainWindow()
         {
@@ -45,6 +47,11 @@ namespace PhotoOrg
                 List<string> photos = GetPhotos(Properties.Settings.Default.FolderLocation);
                 //TODO add loading screen
                 searchProperties = catalogValues(photos);
+                autofillText = catalogSearchTerms(searchProperties);
+                NoPics.Visibility = 0;
+                InitThumbnails(photos);
+                currentPageIndex = 0;
+                Page_Number.Text = (currentPageIndex + 1 + "/" + ((photos.Count / PageSize) + 1));
             }
             else
             {
@@ -55,7 +62,7 @@ namespace PhotoOrg
 
         }
 
-        private void Select_Folder_Click(object sender, RoutedEventArgs e)
+        private async void Select_Folder_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new CommonOpenFileDialog
             {
@@ -65,14 +72,17 @@ namespace PhotoOrg
 
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
+                Loading.Visibility = Visibility.Visible;
                 Properties.Settings.Default.FolderLocation = dialog.FileName;
                 Folder_Text.Text = Properties.Settings.Default.FolderLocation;
-                List<string> photos = GetPhotos(Properties.Settings.Default.FolderLocation);
-                //TODO add loading screen
+                List<string> photos = await GetPhotosAsync(Properties.Settings.Default.FolderLocation);
                 searchProperties = catalogValues(photos);
-                InitThumbnails(photos);
+                autofillText = catalogSearchTerms(searchProperties);
                 currentPageIndex = 0;
                 Page_Number.Text = (currentPageIndex + 1 + "/" + ((photos.Count / PageSize) + 1));
+                InitThumbnails(photos);
+                NoPics.Visibility = Visibility.Hidden;
+                Loading.Visibility = Visibility.Hidden;
                 //foreach(string photo in photos)
                 //{
                 //Debug.WriteLine(photo);
@@ -104,6 +114,33 @@ namespace PhotoOrg
 
             return photoPaths;
         }
+
+        private async Task<List<string>> GetPhotosAsync(string folderPath)
+        {
+            List<string> photoPaths = new List<string>();
+            if (Directory.Exists(folderPath))
+            {
+                string[] extensions = { ".jpg", ".jpeg", ".png", ".gif" };
+                foreach (string ext in extensions)
+                {
+                    string[] files = Directory.GetFiles(folderPath, "*" + ext);
+                    foreach (string file in files)
+                    {
+                        using (FileStream fileStream = File.OpenRead(file))
+                        {
+                            // Perform necessary asynchronous operations with the file
+                            // For example, you can use async methods to read the file contents or extract metadata
+                            // Add the file path to the list
+                            photoPaths.Add(file);
+                        }
+                    }
+                }
+            }
+
+            return photoPaths;
+        }
+
+
 
         private void InitThumbnails(List<string> photoPaths)
         {
@@ -157,6 +194,37 @@ namespace PhotoOrg
             return;
             //actual code
             //used https://aaronbos.dev/posts/iptc-metadata-csharp-imagesharp for help
+        }
+
+        private List<string> catalogSearchTerms(List<List<List<string>>> list)
+        {
+            List<string> stringList = new List<string>();
+            foreach (List<List<string>> list1 in list)
+            {
+                foreach (List<string> list2 in list1)
+                {
+                    foreach (string term in list2)
+                    {
+                        if (!term.StartsWith(Properties.Settings.Default.FolderLocation))
+                        {
+                            stringList.Add(term);
+                            Debug.WriteLine(term);
+                        }
+                        else
+                        {
+                            string term2 = "";
+                            if (term.Length > Properties.Settings.Default.FolderLocation.Length + 1)
+                            {
+                                term2 = term.Substring(Properties.Settings.Default.FolderLocation.Length + 1);
+                            }
+                            stringList.Add(term2);
+                            Debug.WriteLine(term2);
+                        }
+                        
+                    }
+                }
+            }
+            return stringList;
         }
 
         private List<List<List<string>>> catalogValues(List<string> photos)
@@ -246,19 +314,8 @@ namespace PhotoOrg
             metaWindow.ShowDialog();
         }
 
-        private void SearchBox_Changed(object sender, RoutedEventArgs e)
-        {
-            string searchText = SearchBox.Text;
-        }
+        
 
-        private void suggestionComboBox_SelectionChanged(object sender, RoutedEventArgs e)
-        {
-            string balls = "lol";
-        }
 
-        private void textBoxInput_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
     }
 }

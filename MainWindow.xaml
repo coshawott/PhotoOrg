@@ -4,11 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PhotoOrg"
+        xmlns:editors="http://wpfcontrols.com/"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d"
         Title="Photorg" Height="450" Width="800" Icon="data\camera-md.png">
     <Grid Background="#2c2f36" RenderTransformOrigin="0.508,0.503">
         <Button Content="Pick Folder" Click="Select_Folder_Click" RenderTransformOrigin="0.506,-2.202" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="12,12,0,0"/>
         <TextBlock x:Name="Folder_Text" HorizontalAlignment="Left" Margin="79,10,0,0" TextWrapping="Wrap" Text="C:\Users\Admin\Pictures" VerticalAlignment="Top" Foreground="White" Height="20" Width="291" FontSize="16"/>
+        <Image gif:ImageBehavior.AnimatedSource="data/loading.gif" Visibility="Hidden" x:Name="Loading"/>
+        <TextBlock x:Name ="NoPics" TextWrapping="Wrap" Text="No Photos Here :(" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Height="105" Width="636" TextAlignment="Center" FontSize="72"/>
+        <editors:AutoCompleteTextBox x:Name="MyAutoCompleteTextBox" Width="268" Height="18" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,12,71,0" Background="White" Delay="300" DisplayMember="Name" Provider="{Binding MySuggestionProvider}"/>
         <Grid>
             <ScrollViewer Margin="0,45,10,0">
                 <ItemsControl ItemsSource="{Binding Photos}">
@@ -33,25 +38,18 @@
                                     </ContextMenu>
                                 </Button.ContextMenu>
                             </Button>
-                            
+
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
             <Button Content="&gt;&gt;&gt;" Click="Next_Click" HorizontalAlignment="Center" Margin="36,20,0,0" VerticalAlignment="Top"/>
-            <ComboBox x:Name="SearchBox" IsEditable="True" IsTextSearchEnabled="False" VerticalAlignment="Top" HorizontalAlignment="Right"
-              IsDropDownOpen="False" StaysOpenOnEdit="True"
-              SelectionChanged="textBoxInput_SelectionChanged" Margin="0,10,54,0" Width="286">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
+
         </Grid>
         <Button Content="&lt;&lt;&lt;" Click="Prev_Click"  HorizontalAlignment="Center" Margin="0,20,40,0" VerticalAlignment="Top"/>
         <TextBlock x:Name ="Page_Number" TextWrapping="Wrap" Text="Page 0/0" Height="20" VerticalAlignment="Top" Foreground="White" HorizontalAlignment="Center"/>
         <Button Content="Search" Click="Search_Menu_Click" RenderTransformOrigin="0.506,-2.202" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,12,10,0"/>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="6" Margin="-121,122,0,0" VerticalAlignment="Top" Width="11"/>
+
     </Grid>
 </Window>

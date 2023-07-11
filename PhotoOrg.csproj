@@ -10,16 +10,21 @@
 
   <ItemGroup>
     <None Remove="data\camera-md.png" />
+    <None Remove="data\loading.gif" />
+    <None Remove="loading-circle-loading.gif" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoCompleteTextBox" Version="1.6.0" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
     <PackageReference Include="WindowsAPICodePack" Version="7.0.4" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="data\camera-md.png" />
+    <Resource Include="data\loading.gif" />
   </ItemGroup>
 
   <ItemGroup>
