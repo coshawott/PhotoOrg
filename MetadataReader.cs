@@ -45,12 +45,12 @@ namespace PhotoOrg
             {
                 List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.Keywords);
                 List<string> strKeywords = new List<string>();
-                string actualStrKeywords = "";
+                //string actualStrKeywords = "";
                 foreach (var keyword in keywords)
                 {
-                    actualStrKeywords += keyword.Value;
+                    strKeywords.Add(keyword.Value);
                 }
-                strKeywords.Add(actualStrKeywords);
+                //strKeywords.Add(actualStrKeywords);
                 return strKeywords;
             }
             catch (Exception ex)
@@ -182,7 +182,6 @@ namespace PhotoOrg
             }
         }
 
-        // Implement IDisposable interface
         public void Dispose()
         {
             Dispose(true);
@@ -195,10 +194,7 @@ namespace PhotoOrg
             {
                 if (disposing)
                 {
-                    // Clean up managed resources (if any)
                 }
-
-                // Clean up unmanaged resources (if any)
                 image?.Dispose();
 
                 disposed = true;

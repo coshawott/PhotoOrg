@@ -13,7 +13,7 @@
         <TextBlock x:Name="Folder_Text" HorizontalAlignment="Left" Margin="79,10,0,0" TextWrapping="Wrap" Text="C:\Users\Admin\Pictures" VerticalAlignment="Top" Foreground="White" Height="20" Width="291" FontSize="16"/>
         <Image gif:ImageBehavior.AnimatedSource="data/loading.gif" Visibility="Hidden" x:Name="Loading"/>
         <TextBlock x:Name ="NoPics" TextWrapping="Wrap" Text="No Photos Here :(" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Height="105" Width="636" TextAlignment="Center" FontSize="72"/>
-        <editors:AutoCompleteTextBox x:Name="MyAutoCompleteTextBox" Width="268" Height="18" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,12,71,0" Background="White" Delay="300" DisplayMember="Name" Provider="{Binding MySuggestionProvider}"/>
+        <ComboBox x:Name ="SearchBox" ItemsSource="{Binding autofillText}" IsEditable="True" IsTextSearchEnabled="False" PreviewTextInput="PreviewTextInput_EnhanceComboSearch" PreviewKeyUp="PreviewKeyUp_EnhanceComboSearch" DataObject.Pasting="Pasting_EnhanceComboSearch" Width="301" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" RenderTransformOrigin="0.477,0.596" Margin="0,12,54,0" />
         <Grid>
             <ScrollViewer Margin="0,45,10,0">
                 <ItemsControl ItemsSource="{Binding Photos}">
@@ -32,7 +32,6 @@
                                 </Button.ToolTip>
                                 <Button.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Header="Edit" Click="Edit_Click" Tag="{Binding Path}"/>
                                         <MenuItem Header="Open" Click="Open_Click" Tag="{Binding Path}"/>
                                         <MenuItem Header="View Metadata" Click="ViewMeta_Click" Tag="{Binding Path}"/>
                                     </ContextMenu>

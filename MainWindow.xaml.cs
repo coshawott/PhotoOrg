@@ -9,16 +9,14 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Controls;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
-using SixLabors.ImageSharp.Formats.Gif;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Image = System.Windows.Controls.Image;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace PhotoOrg
 {
@@ -30,6 +28,7 @@ namespace PhotoOrg
         public ObservableCollection<Photo> Photos { get; set; }
         private int PageSize = 50;
         private int currentPageIndex = 0;
+        private string searchText = "";
         Image<Rgb24>? image = null;
         List<List<List<string>>> searchProperties = new List<List<List<string>>>();
         List<string> autofillText = new List<string>();
@@ -75,7 +74,7 @@ namespace PhotoOrg
                 Loading.Visibility = Visibility.Visible;
                 Properties.Settings.Default.FolderLocation = dialog.FileName;
                 Folder_Text.Text = Properties.Settings.Default.FolderLocation;
-                List<string> photos = await GetPhotosAsync(Properties.Settings.Default.FolderLocation);
+                List<string> photos =  GetPhotos(Properties.Settings.Default.FolderLocation);
                 searchProperties = catalogValues(photos);
                 autofillText = catalogSearchTerms(searchProperties);
                 currentPageIndex = 0;
@@ -83,10 +82,14 @@ namespace PhotoOrg
                 InitThumbnails(photos);
                 NoPics.Visibility = Visibility.Hidden;
                 Loading.Visibility = Visibility.Hidden;
-                //foreach(string photo in photos)
-                //{
-                //Debug.WriteLine(photo);
-                //}
+                if (photos.Count < 0)
+                {
+                    NoPics.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    NoPics.Visibility = Visibility.Hidden;
+                }
             }
         }
 
@@ -103,9 +106,6 @@ namespace PhotoOrg
                     {
                         using (FileStream fileStream = File.OpenRead(file))
                         {
-                            // Perform necessary operations with the file
-                            // For example, you can read the file contents or extract metadata
-                            // Add the file path to the list
                             photoPaths.Add(file);
                         }
                     }
@@ -115,30 +115,6 @@ namespace PhotoOrg
             return photoPaths;
         }
 
-        private async Task<List<string>> GetPhotosAsync(string folderPath)
-        {
-            List<string> photoPaths = new List<string>();
-            if (Directory.Exists(folderPath))
-            {
-                string[] extensions = { ".jpg", ".jpeg", ".png", ".gif" };
-                foreach (string ext in extensions)
-                {
-                    string[] files = Directory.GetFiles(folderPath, "*" + ext);
-                    foreach (string file in files)
-                    {
-                        using (FileStream fileStream = File.OpenRead(file))
-                        {
-                            // Perform necessary asynchronous operations with the file
-                            // For example, you can use async methods to read the file contents or extract metadata
-                            // Add the file path to the list
-                            photoPaths.Add(file);
-                        }
-                    }
-                }
-            }
-
-            return photoPaths;
-        }
 
 
 
@@ -189,11 +165,79 @@ namespace PhotoOrg
 
         private void Search_Menu_Click(object sender, RoutedEventArgs e)
         {
-            //temp shit
-            MessageBox.Show("Erm,,, what the spruce");
-            return;
-            //actual code
-            //used https://aaronbos.dev/posts/iptc-metadata-csharp-imagesharp for help
+            ComboBox cmb = (ComboBox)SearchBox;
+            searchText = cmb.Text;
+            Debug.WriteLine(searchText);
+            //return;
+            string query = searchText;
+            string keyword = "";
+            List<string> photos = new List<string>();
+            if (!query.Equals(""))
+            {
+                keyword = Properties.Settings.Default.FolderLocation + "\\" + query;
+                Debug.WriteLine(keyword);
+                for (int l1index = 0; l1index < 5; l1index++)
+                {
+
+                    for (int l2index = 0; l2index < searchProperties[l1index].Count; l2index++)
+                    {
+                        for (int l3index = 0; l3index < searchProperties[l1index][l2index].Count; l3index++)
+                        {
+                            if (l1index == 0 && keyword.Equals(searchProperties[l1index][l2index][l3index]))
+                            {
+                                Debug.WriteLine(keyword.Substring(Properties.Settings.Default.FolderLocation.Length + 1));
+                                photos.Add(searchProperties[0][l2index][0]);
+                                break;
+
+                            }
+                            else if ((keyword).Equals(Properties.Settings.Default.FolderLocation + "\\" + searchProperties[l1index][l2index][l3index]))
+                            {
+                                Debug.WriteLine("else if");
+                                Debug.WriteLine(keyword);
+                                Debug.WriteLine(Properties.Settings.Default.FolderLocation + "\\" + searchProperties[0][l2index][0]);
+                                //foreach (string photo in searchProperties[0][l2index])
+                                Debug.WriteLine(Properties.Settings.Default.FolderLocation + "\\" + searchProperties[0][l2index][0]);
+                                photos.Add(searchProperties[0][l2index][0]);
+                                break;
+                            }
+                            else
+                            {
+                                Debug.WriteLine(keyword);
+                                Debug.WriteLine(Properties.Settings.Default.FolderLocation + "\\" + searchProperties[l1index][l2index][l3index]);
+                                
+                            }
+                        }
+                    }
+                    
+                }
+                Debug.WriteLine("images!!!");
+                currentPageIndex = 0;
+                Page_Number.Text = (currentPageIndex + 1 + "/" + ((photos.Count / PageSize) + 1));
+                InitThumbnails(photos);
+                if (photos.Count == 0)
+                {
+                    NoPics.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    NoPics.Visibility = Visibility.Hidden;
+                }
+            }
+            else
+            {
+                photos = GetPhotos(Properties.Settings.Default.FolderLocation);
+                if (photos.Count == 0)
+                {
+                    NoPics.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    NoPics.Visibility = Visibility.Hidden;
+                }
+                currentPageIndex = 0;
+                Page_Number.Text = (currentPageIndex + 1 + "/" + ((photos.Count / PageSize) + 1));
+                InitThumbnails(photos);
+            }
         }
 
         private List<string> catalogSearchTerms(List<List<List<string>>> list)
@@ -205,22 +249,24 @@ namespace PhotoOrg
                 {
                     foreach (string term in list2)
                     {
-                        if (!term.StartsWith(Properties.Settings.Default.FolderLocation))
+                        if (!term.Equals(""))
                         {
-                            stringList.Add(term);
-                            Debug.WriteLine(term);
-                        }
-                        else
-                        {
-                            string term2 = "";
-                            if (term.Length > Properties.Settings.Default.FolderLocation.Length + 1)
+                            if (!term.StartsWith(Properties.Settings.Default.FolderLocation))
                             {
-                                term2 = term.Substring(Properties.Settings.Default.FolderLocation.Length + 1);
+                                stringList.Add(term);
+                                Debug.WriteLine(term);
                             }
-                            stringList.Add(term2);
-                            Debug.WriteLine(term2);
+                            else
+                            {
+                                string term2 = "";
+                                if (term.Length > Properties.Settings.Default.FolderLocation.Length + 1)
+                                {
+                                    term2 = term.Substring(Properties.Settings.Default.FolderLocation.Length + 1);
+                                }
+                                stringList.Add(term2);
+                                Debug.WriteLine(term2);
+                            }
                         }
-                        
                     }
                 }
             }
@@ -267,37 +313,6 @@ namespace PhotoOrg
             dispWindow.ShowDialog();
         }
 
-
-        private void Edit_Click(object sender, RoutedEventArgs e)
-        {
-
-            MenuItem menuItem = sender as MenuItem;
-            string? path = menuItem.Tag.ToString();
-            string? missingPic = null;
-            List<string> photos = GetPhotos(Properties.Settings.Default.FolderLocation);
-            for (int index = 0; index < photos.Count(); index++)
-            {
-                if (photos[index] != null)
-                {
-                    if (photos[index] == path)
-                    {
-                        missingPic = photos[index];
-                        photos.RemoveAt(index);
-                    }
-                }
-            }
-            InitThumbnails(photos);
-            DataEntryWindow? entryWindow = new DataEntryWindow(path);
-            var result = entryWindow.ShowDialog();
-            //if (result == DialogResult.Equals(true))
-            //{
-            MessageBox.Show("Dialog = true!!!");
-            photos.Add(missingPic);
-            InitThumbnails(photos);
-            entryWindow.Dispose();
-
-        }
-
         private void Open_Click(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
@@ -314,8 +329,81 @@ namespace PhotoOrg
             metaWindow.ShowDialog();
         }
 
-        
+        public static T GetChildOfType<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj == null) return null;
 
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+            {
+                var child = VisualTreeHelper.GetChild(depObj, i);
+
+                var result = (child as T) ?? GetChildOfType<T>(child);
+                if (result != null) return result;
+            }
+            return null;
+        }
+
+        private void PreviewTextInput_EnhanceComboSearch(object sender, TextCompositionEventArgs e)
+        {
+            ComboBox cmb = (ComboBox)sender;
+
+            cmb.IsDropDownOpen = true;
+
+            if (!string.IsNullOrEmpty(cmb.Text))
+            {
+                string fullText = cmb.Text.Insert(GetChildOfType<TextBox>(cmb).CaretIndex, e.Text);
+                searchText = fullText;
+                cmb.ItemsSource = autofillText.Where(s => s.IndexOf(fullText, StringComparison.InvariantCultureIgnoreCase) != -1).ToList();
+            }
+            else if (!string.IsNullOrEmpty(e.Text))
+            {
+                cmb.ItemsSource = autofillText.Where(s => s.IndexOf(e.Text, StringComparison.InvariantCultureIgnoreCase) != -1).ToList();
+                searchText = e.Text;
+            }
+            else
+            {
+                cmb.ItemsSource = autofillText;
+            }
+        }
+
+        private void Pasting_EnhanceComboSearch(object sender, DataObjectPastingEventArgs e)
+        {
+            ComboBox cmb = (ComboBox)sender;
+
+            cmb.IsDropDownOpen = true;
+
+            string pastedText = (string)e.DataObject.GetData(typeof(string));
+            string fullText = cmb.Text.Insert(GetChildOfType<TextBox>(cmb).CaretIndex, pastedText);
+
+            if (!string.IsNullOrEmpty(fullText))
+            {
+                searchText = fullText;
+                cmb.ItemsSource = autofillText.Where(s => s.IndexOf(fullText, StringComparison.InvariantCultureIgnoreCase) != -1).ToList();
+            }
+            else
+            {
+                cmb.ItemsSource = autofillText;
+            }
+        }
+
+        private void PreviewKeyUp_EnhanceComboSearch(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Back || e.Key == Key.Delete)
+            {
+                ComboBox cmb = (ComboBox)sender;
+
+                cmb.IsDropDownOpen = true;
+
+                if (!string.IsNullOrEmpty(cmb.Text))
+                {
+                    cmb.ItemsSource = autofillText.Where(s => s.IndexOf(cmb.Text, StringComparison.InvariantCultureIgnoreCase) != -1).ToList();
+                }
+                else
+                {
+                    cmb.ItemsSource = autofillText;
+                }
+            }
+        }
 
     }
 }
