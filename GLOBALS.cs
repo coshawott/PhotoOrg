@@ -12,8 +12,6 @@ namespace PhotoOrg
 {
     static class GLOBALS
     {
-        public static Image<Rgb24> image = null;
         public static string path = null;
-        public static Boolean initialOpen = true;
     }
 }

@@ -353,11 +353,11 @@ namespace PhotoOrg
             {
                 string fullText = cmb.Text.Insert(GetChildOfType<TextBox>(cmb).CaretIndex, e.Text);
                 searchText = fullText;
-                cmb.ItemsSource = autofillText.Where(s => s.IndexOf(fullText, StringComparison.InvariantCultureIgnoreCase) != -1).ToList();
+                cmb.ItemsSource = FilterAutofillText(fullText);
             }
             else if (!string.IsNullOrEmpty(e.Text))
             {
-                cmb.ItemsSource = autofillText.Where(s => s.IndexOf(e.Text, StringComparison.InvariantCultureIgnoreCase) != -1).ToList();
+                cmb.ItemsSource = FilterAutofillText(e.Text);
                 searchText = e.Text;
             }
             else
@@ -378,7 +378,7 @@ namespace PhotoOrg
             if (!string.IsNullOrEmpty(fullText))
             {
                 searchText = fullText;
-                cmb.ItemsSource = autofillText.Where(s => s.IndexOf(fullText, StringComparison.InvariantCultureIgnoreCase) != -1).ToList();
+                cmb.ItemsSource = FilterAutofillText(fullText);
             }
             else
             {
@@ -396,7 +396,7 @@ namespace PhotoOrg
 
                 if (!string.IsNullOrEmpty(cmb.Text))
                 {
-                    cmb.ItemsSource = autofillText.Where(s => s.IndexOf(cmb.Text, StringComparison.InvariantCultureIgnoreCase) != -1).ToList();
+                    cmb.ItemsSource = FilterAutofillText(cmb.Text);
                 }
                 else
                 {
@@ -404,6 +404,63 @@ namespace PhotoOrg
                 }
             }
         }
+
+        private List<string> FilterAutofillText(string searchText)
+        {
+            List<string> searchTerms = GetSearchTerms(searchText);
+
+            List<string> filteredItems = new List<string>();
+
+            foreach (string term in searchTerms)
+            {
+                string trimmedTerm = term.Trim('\"');
+                List<string> matchedItems = autofillText
+                    .Where(s => s.IndexOf(trimmedTerm, StringComparison.InvariantCultureIgnoreCase) != -1)
+                    .ToList();
+
+                filteredItems.AddRange(matchedItems);
+            }
+
+            return filteredItems.Distinct().ToList();
+        }
+
+
+        private List<string> GetSearchTerms(string searchText)
+        {
+            List<string> searchTerms = new List<string>();
+
+            string[] terms = searchText.Split(';');
+
+            foreach (string term in terms)
+            {
+                string trimmedTerm = term.Trim();
+
+                if (trimmedTerm.StartsWith("\"") && trimmedTerm.EndsWith("\""))
+                {
+                    string searchTerm = trimmedTerm.Trim('\"');
+                    searchTerms.Add(searchTerm);
+                }
+                else
+                {
+                    string[] subTerms = trimmedTerm.Split(' ');
+                    foreach (string subTerm in subTerms)
+                    {
+                        searchTerms.Add(subTerm);
+                    }
+                }
+            }
+
+            return searchTerms;
+        }
+
+        private void AdvSearch_Menu_Click(object sender, RoutedEventArgs e)
+        {
+            AdvanceSearch advanceSearch = new AdvanceSearch(searchProperties, autofillText);
+            advanceSearch.Show();
+        }
+
+
+
 
     }
 }

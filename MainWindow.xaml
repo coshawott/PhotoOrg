@@ -7,13 +7,13 @@
         xmlns:editors="http://wpfcontrols.com/"
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d"
-        Title="Photorg" Height="450" Width="800" Icon="data\camera-md.png">
+        Title="Photorg" Height="500" Width="900" Icon="data\camera-md.png">
     <Grid Background="#2c2f36" RenderTransformOrigin="0.508,0.503">
         <Button Content="Pick Folder" Click="Select_Folder_Click" RenderTransformOrigin="0.506,-2.202" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="12,12,0,0"/>
         <TextBlock x:Name="Folder_Text" HorizontalAlignment="Left" Margin="79,10,0,0" TextWrapping="Wrap" Text="C:\Users\Admin\Pictures" VerticalAlignment="Top" Foreground="White" Height="20" Width="291" FontSize="16"/>
         <Image gif:ImageBehavior.AnimatedSource="data/loading.gif" Visibility="Hidden" x:Name="Loading"/>
         <TextBlock x:Name ="NoPics" TextWrapping="Wrap" Text="No Photos Here :(" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Height="105" Width="636" TextAlignment="Center" FontSize="72"/>
-        <ComboBox x:Name ="SearchBox" ItemsSource="{Binding autofillText}" IsEditable="True" IsTextSearchEnabled="False" PreviewTextInput="PreviewTextInput_EnhanceComboSearch" PreviewKeyUp="PreviewKeyUp_EnhanceComboSearch" DataObject.Pasting="Pasting_EnhanceComboSearch" Width="301" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" RenderTransformOrigin="0.477,0.596" Margin="0,12,54,0" />
+        <ComboBox x:Name ="SearchBox" ItemsSource="{Binding autofillText}" IsEditable="True" IsTextSearchEnabled="False" PreviewTextInput="PreviewTextInput_EnhanceComboSearch" PreviewKeyUp="PreviewKeyUp_EnhanceComboSearch" DataObject.Pasting="Pasting_EnhanceComboSearch" Width="281" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" RenderTransformOrigin="0.477,0.596"  Margin="0,12,124,0" />
         <Grid>
             <ScrollViewer Margin="0,45,10,0">
                 <ItemsControl ItemsSource="{Binding Photos}">
@@ -43,11 +43,13 @@
                 </ItemsControl>
             </ScrollViewer>
             <Button Content="&gt;&gt;&gt;" Click="Next_Click" HorizontalAlignment="Center" Margin="36,20,0,0" VerticalAlignment="Top"/>
+            
 
         </Grid>
         <Button Content="&lt;&lt;&lt;" Click="Prev_Click"  HorizontalAlignment="Center" Margin="0,20,40,0" VerticalAlignment="Top"/>
         <TextBlock x:Name ="Page_Number" TextWrapping="Wrap" Text="Page 0/0" Height="20" VerticalAlignment="Top" Foreground="White" HorizontalAlignment="Center"/>
-        <Button Content="Search" Click="Search_Menu_Click" RenderTransformOrigin="0.506,-2.202" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,12,10,0"/>
+        <Button Content="Search" Click="Search_Menu_Click" RenderTransformOrigin="0.506,-2.202" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,12,80,0"/>
+        <Button Content="Adv Search" Click="AdvSearch_Menu_Click" RenderTransformOrigin="0.506,-2.202" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,12,10,0"/>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="6" Margin="-121,122,0,0" VerticalAlignment="Top" Width="11"/>
 
     </Grid>
