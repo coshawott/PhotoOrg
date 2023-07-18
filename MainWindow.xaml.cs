@@ -5,24 +5,14 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Windows.Controls;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using Image = System.Windows.Controls.Image;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-
 namespace PhotoOrg
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public ObservableCollection<Photo> Photos { get; set; }
@@ -32,6 +22,7 @@ namespace PhotoOrg
         Image<Rgb24>? image = null;
         List<List<List<string>>> searchProperties = new List<List<List<string>>>();
         List<string> autofillText = new List<string>();
+        public List<string> advPhotos = new List<string>();
 
         public MainWindow()
         {
@@ -168,7 +159,6 @@ namespace PhotoOrg
             ComboBox cmb = (ComboBox)SearchBox;
             searchText = cmb.Text;
             Debug.WriteLine(searchText);
-            //return;
             string query = searchText;
             string keyword = "";
             List<string> photos = new List<string>();
@@ -176,7 +166,7 @@ namespace PhotoOrg
             {
                 keyword = Properties.Settings.Default.FolderLocation + "\\" + query;
                 Debug.WriteLine(keyword);
-                for (int l1index = 0; l1index < 5; l1index++)
+                for (int l1index = 0; l1index < searchProperties.Count; l1index++)
                 {
 
                     for (int l2index = 0; l2index < searchProperties[l1index].Count; l2index++)
@@ -243,13 +233,15 @@ namespace PhotoOrg
         private List<string> catalogSearchTerms(List<List<List<string>>> list)
         {
             List<string> stringList = new List<string>();
+            HashSet<string> uniqueTerms = new HashSet<string>();
+
             foreach (List<List<string>> list1 in list)
             {
                 foreach (List<string> list2 in list1)
                 {
                     foreach (string term in list2)
                     {
-                        if (!term.Equals(""))
+                        if (!term.Equals("") && !uniqueTerms.Contains(term))
                         {
                             if (!term.StartsWith(Properties.Settings.Default.FolderLocation))
                             {
@@ -266,12 +258,14 @@ namespace PhotoOrg
                                 stringList.Add(term2);
                                 Debug.WriteLine(term2);
                             }
+                            uniqueTerms.Add(term);
                         }
                     }
                 }
             }
             return stringList;
         }
+
 
         private List<List<List<string>>> catalogValues(List<string> photos)
         {
@@ -455,12 +449,15 @@ namespace PhotoOrg
 
         private void AdvSearch_Menu_Click(object sender, RoutedEventArgs e)
         {
-            AdvanceSearch advanceSearch = new AdvanceSearch(searchProperties, autofillText);
-            advanceSearch.Show();
+            AdvanceSearch advanceSearch = new AdvanceSearch(searchProperties);
+            advanceSearch.ShowDialog();
+            Debug.WriteLine("GLOBALS length:" + GLOBALS.advPhotos.Count);
+            foreach (string path in GLOBALS.advPhotos)
+            {
+                Debug.WriteLine("Printed from MainWindow:" + path);
+            }
+            InitThumbnails(GLOBALS.advPhotos);
+
         }
-
-
-
-
     }
 }

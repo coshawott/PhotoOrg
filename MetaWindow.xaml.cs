@@ -16,9 +16,6 @@ using SixLabors.ImageSharp;
 
 namespace PhotoOrg
 {
-    /// <summary>
-    /// Interaction logic for Window1.xaml
-    /// </summary>
     public partial class MetaWindow : Window
     {
         String path;
@@ -42,6 +39,7 @@ namespace PhotoOrg
             Country.Text = metadataReader.GetCountry();
             Keywords.Text = metadataReader.GetKeywords();
             Name.Text = metadataReader.GetName();
+            Location.Text = metadataReader.GetLocation();
 
             
 

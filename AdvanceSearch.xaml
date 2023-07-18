@@ -7,16 +7,21 @@
         mc:Ignorable="d"
         Title="AdvanceSearch" Height="450" Width="800">
     <Grid Background="#2c2f36" RenderTransformOrigin="0.508,0.503">
-        <ListBox x:Name="ListBoxWithCheckboxes" Width="400" HorizontalAlignment="Left">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <CheckBox IsChecked="{Binding IsSelected}" />
-                        <TextBlock Text="{Binding ItemText}" Margin="5,0,0,0" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <ScrollViewer HorizontalAlignment="Left" Width="416"
+              VerticalScrollBarVisibility="Auto">
+            <ListBox x:Name="ListBoxWithCheckboxes" Width="400" HorizontalAlignment="Left"
+         ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding IsSelected}" />
+                            <TextBlock Text="{Binding ItemText}" Margin="5,0,0,0" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+        </ScrollViewer>
         <Button Content="Search" Width="40" Height="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Click="Search_Click"/>
 
     </Grid>
