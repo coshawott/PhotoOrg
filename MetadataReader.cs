@@ -34,7 +34,6 @@ namespace PhotoOrg
             }
             catch (Exception ex)
             {
-                //Debug.WriteLine(ex);
                 return "";
             }
         }
@@ -45,17 +44,14 @@ namespace PhotoOrg
             {
                 List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.Keywords);
                 List<string> strKeywords = new List<string>();
-                //string actualStrKeywords = "";
                 foreach (var keyword in keywords)
                 {
                     strKeywords.Add(keyword.Value);
                 }
-                //strKeywords.Add(actualStrKeywords);
                 return strKeywords;
             }
             catch (Exception ex)
             {
-                //Debug.WriteLine(ex);
                 List<string> strKeywords = new List<string>();
                 strKeywords.Add("");
                 return strKeywords;
@@ -76,7 +72,6 @@ namespace PhotoOrg
             }
             catch (Exception ex)
             {
-                //Debug.WriteLine(ex);
                 return "";
             }
         }
@@ -95,7 +90,6 @@ namespace PhotoOrg
             }
             catch (Exception ex)
             {
-                //Debug.WriteLine(ex);
                 List<string> strKeywords = new List<string>();
                 strKeywords.Add("");
                 return strKeywords;
@@ -116,7 +110,6 @@ namespace PhotoOrg
             }
             catch (Exception ex)
             {
-                //Debug.WriteLine(ex);
                 return "";
             }
         }
@@ -135,7 +128,6 @@ namespace PhotoOrg
             }
             catch (Exception ex)
             {
-                //Debug.WriteLine(ex);
                 List<string> strKeywords = new List<string>();
                 strKeywords.Add("");
                 return strKeywords;
@@ -156,7 +148,6 @@ namespace PhotoOrg
             }
             catch (Exception ex)
             {
-                //Debug.WriteLine(ex);
                 return "";
             }
         }
@@ -175,7 +166,44 @@ namespace PhotoOrg
             }
             catch (Exception ex)
             {
-                //Debug.WriteLine(ex);
+                List<string> strKeywords = new List<string>();
+                strKeywords.Add("");
+                return strKeywords;
+            }
+        }
+
+        public string GetLocation()
+        {
+            try
+            {
+                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.LocationName);
+                string strKeywords = "";
+                foreach (var keyword in keywords)
+                {
+                    strKeywords += " \"" + keyword.Value + "\"";
+                }
+                return strKeywords;
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
+        public List<string> GetLocationList()
+        {
+            try
+            {
+                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.LocationName);
+                List<string> strKeywords = new List<string>();
+                foreach (var keyword in keywords)
+                {
+                    strKeywords.Add(keyword.Value);
+                }
+                return strKeywords;
+            }
+            catch (Exception ex)
+            {
                 List<string> strKeywords = new List<string>();
                 strKeywords.Add("");
                 return strKeywords;
