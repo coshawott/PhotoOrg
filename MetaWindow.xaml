@@ -12,11 +12,13 @@
         <TextBlock x:Name ="City" TextWrapping="Wrap" Text="null" Margin="300,10,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBlock TextWrapping="Wrap" Text="Country:" Margin="210,40,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBlock x:Name ="Country" TextWrapping="Wrap" Text="null" Margin="300,40,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBlock TextWrapping="Wrap" Text="Keywords:" Margin="210,70,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBlock x:Name ="Keywords" TextWrapping="Wrap" Text="null" Margin="300,70,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBlock TextWrapping="Wrap" Text="Name:" Margin="210,100,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBlock x:Name ="Name" TextWrapping="Wrap" Text="null" Margin="300,100,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBlock TextWrapping="Wrap" Text="Location:" Margin="210,130,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBlock x:Name ="Location" TextWrapping="Wrap" Text="null" Margin="300,130,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock TextWrapping="Wrap" Text="State:" Margin="210,70,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock x:Name ="State" TextWrapping="Wrap" Text="null" Margin="300,70,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock TextWrapping="Wrap" Text="Location:" Margin="210,100,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock x:Name ="Location" TextWrapping="Wrap" Text="null" Margin="300,100,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock TextWrapping="Wrap" Text="Name:" Margin="210,130,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock x:Name ="Name" TextWrapping="Wrap" Text="null" Margin="300,130,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock TextWrapping="Wrap" Text="Keywords:" Margin="210,160,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock x:Name ="Keywords" TextWrapping="Wrap" Text="null" Margin="300,160,0,0" Foreground="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
     </Grid>
 </Window>

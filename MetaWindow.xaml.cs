@@ -40,7 +40,7 @@ namespace PhotoOrg
             Keywords.Text = metadataReader.GetKeywords();
             Name.Text = metadataReader.GetName();
             Location.Text = metadataReader.GetLocation();
-
+            State.Text = metadataReader.GetState();
             
 
         }

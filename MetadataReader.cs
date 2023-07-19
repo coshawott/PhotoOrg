@@ -210,6 +210,44 @@ namespace PhotoOrg
             }
         }
 
+        public string GetState()
+        {
+            try
+            {
+                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.LocationName);
+                string strKeywords = "";
+                foreach (var keyword in keywords)
+                {
+                    strKeywords += " \"" + keyword.Value + "\"";
+                }
+                return strKeywords;
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
+        public List<string> GetStateList()
+        {
+            try
+            {
+                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.LocationName);
+                List<string> strKeywords = new List<string>();
+                foreach (var keyword in keywords)
+                {
+                    strKeywords.Add(keyword.Value);
+                }
+                return strKeywords;
+            }
+            catch (Exception ex)
+            {
+                List<string> strKeywords = new List<string>();
+                strKeywords.Add("");
+                return strKeywords;
+            }
+        }
+
         public void Dispose()
         {
             Dispose(true);

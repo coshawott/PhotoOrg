@@ -277,6 +277,7 @@ namespace PhotoOrg
             List<List<string>> countryVals = new List<List<string>>();
             List<List<string>> nameVals = new List<List<string>>();
             List<List<string>> locationVals = new List<List<string>>();
+            List<List<string>> stateVals = new List<List<string>>();
             foreach (string photo in photos)
             {
                 List<string> photoList = new List<string>();
@@ -288,7 +289,7 @@ namespace PhotoOrg
                 countryVals.Add(tagRead.GetCountryList());
                 nameVals.Add(tagRead.GetNameList());
                 locationVals.Add(tagRead.GetLocationList());
-                
+                stateVals.Add(tagRead.GetStateList());
                 tagRead.Dispose();
 
             }
@@ -297,6 +298,8 @@ namespace PhotoOrg
             endVals.Add(cityVals);
             endVals.Add(countryVals);
             endVals.Add(nameVals);
+            endVals.Add(locationVals);
+            endVals.Add(stateVals);
             return endVals;
         }
 
