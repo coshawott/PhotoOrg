@@ -102,7 +102,7 @@ namespace PhotoOrg
                     }
                 }
             }
-
+            photoPaths.Sort();
             return photoPaths;
         }
 
@@ -263,6 +263,7 @@ namespace PhotoOrg
                     }
                 }
             }
+            stringList.Sort();
             return stringList;
         }
 
@@ -275,6 +276,7 @@ namespace PhotoOrg
             List<List<string>> cityVals = new List<List<string>>();
             List<List<string>> countryVals = new List<List<string>>();
             List<List<string>> nameVals = new List<List<string>>();
+            List<List<string>> locationVals = new List<List<string>>();
             foreach (string photo in photos)
             {
                 List<string> photoList = new List<string>();
@@ -285,7 +287,7 @@ namespace PhotoOrg
                 cityVals.Add(tagRead.GetCityList());
                 countryVals.Add(tagRead.GetCountryList());
                 nameVals.Add(tagRead.GetNameList());
-
+                locationVals.Add(tagRead.GetLocationList());
                 
                 tagRead.Dispose();
 
