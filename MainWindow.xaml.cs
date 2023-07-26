@@ -1,16 +1,16 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using System.Diagnostics;
-using System.Windows.Controls;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using System.Windows.Media;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 namespace PhotoOrg
 {
     public partial class MainWindow : Window
@@ -47,8 +47,8 @@ namespace PhotoOrg
             {
                 Folder_Text.Text = "Please select a folder";
             }
-            
-            
+
+
 
         }
 
@@ -65,7 +65,7 @@ namespace PhotoOrg
                 Loading.Visibility = Visibility.Visible;
                 Properties.Settings.Default.FolderLocation = dialog.FileName;
                 Folder_Text.Text = Properties.Settings.Default.FolderLocation;
-                List<string> photos =  GetPhotos(Properties.Settings.Default.FolderLocation);
+                List<string> photos = GetPhotos(Properties.Settings.Default.FolderLocation);
                 searchProperties = catalogValues(photos);
                 autofillText = catalogSearchTerms(searchProperties);
                 currentPageIndex = 0;
@@ -89,7 +89,7 @@ namespace PhotoOrg
             List<string> photoPaths = new List<string>();
             if (Directory.Exists(folderPath))
             {
-                string[] extensions = { ".jpg", ".jpeg", ".png", ".gif" };
+                string[] extensions = { ".jpg", ".jpeg", ".png", ".gif", ".tif" };
                 foreach (string ext in extensions)
                 {
                     string[] files = Directory.GetFiles(folderPath, "*" + ext);
@@ -101,22 +101,37 @@ namespace PhotoOrg
                         }
                     }
                 }
+
+                string[] subFolders = Directory.GetDirectories(folderPath);
+                foreach (string subFolder in subFolders)
+                {
+                    List<string> subFolderPhotos = GetPhotos(subFolder);
+                    photoPaths.AddRange(subFolderPhotos);
+                }
             }
+
             photoPaths.Sort();
             return photoPaths;
         }
 
-
-
-
         private void InitThumbnails(List<string> photoPaths)
         {
+            List<string> newPhotoPaths = new List<string>(photoPaths);
+            newPhotoPaths = newPhotoPaths.Distinct().ToList();
             int startIndex = currentPageIndex * PageSize;
-            int endIndex = Math.Min(startIndex + PageSize, photoPaths.Count);
+            int endIndex = Math.Min(startIndex + PageSize, newPhotoPaths.Count);
+            if (newPhotoPaths.Count == 0)
+            {
+                NoPics.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                NoPics.Visibility = Visibility.Hidden;
+            }
             Photos.Clear();
             for (int i = startIndex; i < endIndex; i++)
             {
-                Photos.Add(new Photo { Path = photoPaths[i] });
+                Photos.Add(new Photo { Path = newPhotoPaths[i] });
             }
         }
 
@@ -194,11 +209,11 @@ namespace PhotoOrg
                             {
                                 Debug.WriteLine(keyword);
                                 Debug.WriteLine(Properties.Settings.Default.FolderLocation + "\\" + searchProperties[l1index][l2index][l3index]);
-                                
+
                             }
                         }
                     }
-                    
+
                 }
                 Debug.WriteLine("images!!!");
                 currentPageIndex = 0;
@@ -277,7 +292,7 @@ namespace PhotoOrg
             List<List<string>> countryVals = new List<List<string>>();
             List<List<string>> nameVals = new List<List<string>>();
             List<List<string>> locationVals = new List<List<string>>();
-            List<List<string>> stateVals = new List<List<string>>();
+            List<List<string>> captionVals = new List<List<string>>();
             foreach (string photo in photos)
             {
                 List<string> photoList = new List<string>();
@@ -285,11 +300,9 @@ namespace PhotoOrg
                 pathVals.Add(photoList);
                 MetadataReader tagRead = new MetadataReader(photo);
                 keywordVals.Add(tagRead.GetKeywordList());
-                cityVals.Add(tagRead.GetCityList());
-                countryVals.Add(tagRead.GetCountryList());
                 nameVals.Add(tagRead.GetNameList());
                 locationVals.Add(tagRead.GetLocationList());
-                stateVals.Add(tagRead.GetStateList());
+                //captionVals.Add(tagRead.GetCaptionList());
                 tagRead.Dispose();
 
             }
@@ -299,7 +312,7 @@ namespace PhotoOrg
             endVals.Add(countryVals);
             endVals.Add(nameVals);
             endVals.Add(locationVals);
-            endVals.Add(stateVals);
+            ///endVals.Add(captionVals);
             return endVals;
         }
 
@@ -320,13 +333,7 @@ namespace PhotoOrg
             dispWindow.ShowDialog();
         }
 
-        private void ViewMeta_Click(object sender, RoutedEventArgs e)
-        {
-            MenuItem menuItem = sender as MenuItem;
-            string path = menuItem.Tag.ToString();
-            MetaWindow metaWindow = new MetaWindow(path);
-            metaWindow.ShowDialog();
-        }
+        
 
         public static T GetChildOfType<T>(DependencyObject depObj) where T : DependencyObject
         {
@@ -461,6 +468,7 @@ namespace PhotoOrg
             {
                 Debug.WriteLine("Printed from MainWindow:" + path);
             }
+
             InitThumbnails(GLOBALS.advPhotos);
 
         }

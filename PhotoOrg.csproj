@@ -11,20 +11,26 @@
   <ItemGroup>
     <None Remove="data\camera-md.png" />
     <None Remove="data\loading.gif" />
+    <None Remove="exiftool.exe" />
     <None Remove="loading-circle-loading.gif" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoCompleteTextBox" Version="1.6.0" />
+    <PackageReference Include="BitMiracle.LibTiff.NET" Version="2.4.649" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
+    <PackageReference Include="MetadataExtractor" Version="2.8.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
     <PackageReference Include="WindowsAPICodePack" Version="7.0.4" />
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
+    <PackageReference Include="XmpCore" Version="6.1.10.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="data\camera-md.png" />
     <Resource Include="data\loading.gif" />
+    <Content Include="exiftool.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

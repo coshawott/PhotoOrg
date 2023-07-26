@@ -6,12 +6,51 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PhotoOrg"
         mc:Ignorable="d"
-        Title="Window1" Height="450" Width="800">
-        
+        SizeChanged="Window_SizeChanged"
+        Title="Window1" Height="450" Width="800"
+        WindowState="Maximized">
 
     <Grid Background="#2c2f36">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <!-- Row for the image -->
+            <RowDefinition Height="Auto" />
+            <!-- Row for the caption -->
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <!-- Column for the image -->
+            <ColumnDefinition Width="Auto" />
+            <!-- Column for the metadata -->
+            <ColumnDefinition Width="Auto" />
+            <!-- Width for the GridSplitter -->
+            <ColumnDefinition Width="Auto" />
+            <!-- Column for additional metadata or empty -->
+        </Grid.ColumnDefinitions>
 
-        <Image x:Name ="DispImage" Height="{Binding ElementName=DispWindow, Path=ActualHeight}" Width="{Binding ElementName=DispWindow, Path=ActualWidth}" HorizontalAlignment="Center"/>
+        <Image x:Name="DispImage" Grid.Row="0" Grid.Column="0" Stretch="Uniform" />
 
+        <StackPanel Grid.Row="0" Grid.Column="1" Margin="10">
+            <TextBlock x:Name="Keywords" TextWrapping="Wrap" Text="Loading" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left" />
+            <TextBlock TextWrapping="Wrap" Text="" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <TextBlock x:Name="Name" TextWrapping="Wrap" Text="Loading" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <TextBlock TextWrapping="Wrap" Text="" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <TextBlock x:Name="Categories" TextWrapping="Wrap" Text="Loading" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <TextBlock TextWrapping="Wrap" Text="" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <TextBlock x:Name="Date" TextWrapping="NoWrap" Text="Loading" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <TextBlock TextWrapping="Wrap" Text="" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <TextBlock x:Name="Notes" TextWrapping="Wrap" Text="Loading" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        </StackPanel>
+
+        <!-- GridSplitter to adjust the width between metadata and additional metadata/empty -->
+        <GridSplitter Grid.Row="0" Grid.Column="2" Width="5" VerticalAlignment="Stretch" HorizontalAlignment="Center" ResizeBehavior="PreviousAndNext" Background="Gray" Visibility="Hidden" />
+
+        <!-- Additional metadata or empty column -->
+        <StackPanel Grid.Row="0" Grid.Column="3" Margin="10">
+            <!-- Put additional metadata elements here, or leave it empty -->
+        </StackPanel>
+
+        <!-- Caption -->
+        <TextBlock x:Name="Caption" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" TextWrapping="NoWrap" Text="Loading" Foreground="White" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Top" />
     </Grid>
 </Window>

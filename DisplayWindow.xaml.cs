@@ -1,6 +1,6 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,23 +19,42 @@ namespace PhotoOrg
     public partial class DisplayWindow : Window
     {
         string path;
-        public Image<Rgb24> image;
+        public BitmapImage image;
         public DisplayWindow(string path)
         {
             InitializeComponent();
             this.path = path;
-            using (var tempImage = SixLabors.ImageSharp.Image.Load<Rgb24>(path).Clone())
-            {
-                image = tempImage.Clone();
-                tempImage.Dispose();
-            }
-            BitmapImage bitimg = new BitmapImage();
-            bitimg.BeginInit();
-            bitimg.UriSource = new Uri(path);
-            bitimg.EndInit();
+            BitmapImage bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.UriSource = new Uri(path);
+            bitmap.EndInit();
+            DispImage.Source = bitmap;
+            //ChangeImageSize();
+            Debug.WriteLine(path);
             DispWindow.Title = path;
-            DispImage.Source = bitimg;
-            
+            MetadataReader captionReader = new MetadataReader(path);
+            Caption.Text = captionReader.GetCaption();
+            Caption.Text = Caption.Text.Replace("Caption                         :", "");
+            Keywords.Text = $"Keywords: {GetKeywordString(captionReader)}";
+            Name.Text = $"Label: {captionReader.GetNameList()[0]}";
+            Categories.Text = $"Categories: {captionReader.GetLocationList()[0]}";
+            Date.Text = $"Date: {captionReader.GetDate()}";
+            Notes.Text = $"Notes: {captionReader.GetNotes()}";
+        }
+
+        private string GetKeywordString(MetadataReader reader)
+        {
+            string endVal = "";
+            foreach (string keyword in reader.GetKeywordList())
+            {
+                endVal += $"\"{keyword}\" ";
+            }
+            return endVal;
+        }
+
+        private void Window_SizeChanged( object sender, SizeChangedEventArgs e )
+        {
+            //ChangeImageSize();
         }
     }
    

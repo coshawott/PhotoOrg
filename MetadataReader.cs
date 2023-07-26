@@ -5,248 +5,391 @@ using System.Security.AccessControl;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
 using SixLabors.ImageSharp.PixelFormats;
+using MetadataExtractor;
+using MetadataExtractor.Formats.Iptc;
+using MetadataExtractor.Formats.Xmp;
+using System.Linq;
+using System.Windows;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Text;
 
 namespace PhotoOrg
 {
     class MetadataReader : IDisposable
     {
-        private Image<Rgba32> image;
+        private IReadOnlyList<Directory> imageTif;
+        private SixLabors.ImageSharp.Image image;
         private string path;
         private bool disposed = false;
 
         public MetadataReader(string path)
         {
-            this.image = Image.Load<Rgba32>(path);
-            this.path = path;
-        }
-
-        public string GetKeywords()
-        {
-            try
+            if (path.EndsWith(".tif"))
             {
-                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.Keywords);
-                string strKeywords = "";
-                foreach (var keyword in keywords)
+                imageTif = ImageMetadataReader.ReadMetadata(path);
+            }
+            else
+            {
+                try
                 {
-                    strKeywords += " \"" + keyword.Value + "\"";
+                    this.image = SixLabors.ImageSharp.Image.Load(path);
                 }
-                return strKeywords;
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Exception:{ex}\n\n\nthrown at {path}");
+                }
+                
             }
-            catch (Exception ex)
-            {
-                return "";
-            }
+            this.path = path;
         }
 
         public List<string> GetKeywordList()
         {
-            try
+            if (path.EndsWith(".tif"))
             {
-                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.Keywords);
-                List<string> strKeywords = new List<string>();
-                foreach (var keyword in keywords)
-                {
-                    strKeywords.Add(keyword.Value);
-                }
-                return strKeywords;
-            }
-            catch (Exception ex)
-            {
-                List<string> strKeywords = new List<string>();
-                strKeywords.Add("");
-                return strKeywords;
-            }
-        }
+                List<string> keywordsList = new List<string>();
 
-        public string GetCity()
-        {
-            try
-            {
-                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.City);
-                string strKeywords = "";
-                foreach (var keyword in keywords)
+                try
                 {
-                    strKeywords += " \"" + keyword.Value + "\"";
-                }
-                return strKeywords;
-            }
-            catch (Exception ex)
-            {
-                return "";
-            }
-        }
+                    var directories = ImageMetadataReader.ReadMetadata(path);
 
-        public List<string> GetCityList()
-        {
-            try
-            {
-                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.City);
-                List<string> strKeywords = new List<string>();
-                foreach (var keyword in keywords)
-                {
-                    strKeywords.Add(keyword.Value);
-                }
-                return strKeywords;
-            }
-            catch (Exception ex)
-            {
-                List<string> strKeywords = new List<string>();
-                strKeywords.Add("");
-                return strKeywords;
-            }
-        }
+                    foreach (var directory in directories)
+                    {
+                        if (directory is IptcDirectory iptcDirectory)
+                        {
+                            if (iptcDirectory.ContainsTag(IptcDirectory.TagKeywords))
+                            {
+                                var keywords = iptcDirectory.GetStringArray(IptcDirectory.TagKeywords);
 
-        public string GetCountry()
-        {
-            try
-            {
-                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.Country);
-                string strKeywords = "";
-                foreach (var keyword in keywords)
-                {
-                    strKeywords += " \"" + keyword.Value + "\"";
+                                if (keywords != null && keywords.Length > 0)
+                                {
+                                    keywordsList.AddRange(keywords);
+                                }
+                            }
+                        }
+                    }
                 }
-                return strKeywords;
-            }
-            catch (Exception ex)
-            {
-                return "";
-            }
-        }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error reading metadata: {ex.Message}");
+                }
 
-        public List<string> GetCountryList()
-        {
-            try
-            {
-                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.Country);
-                List<string> strKeywords = new List<string>();
-                foreach (var keyword in keywords)
-                {
-                    strKeywords.Add(keyword.Value);
-                }
-                return strKeywords;
-            }
-            catch (Exception ex)
-            {
-                List<string> strKeywords = new List<string>();
-                strKeywords.Add("");
-                return strKeywords;
-            }
-        }
+                return keywordsList;
 
-        public string GetName()
-        {
-            try
+            }
+            else
             {
-                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.Name);
-                string strKeywords = "";
-                foreach (var keyword in keywords)
+                try
                 {
-                    strKeywords += " \"" + keyword.Value + "\"";
+                    List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.Keywords);
+                    List<string> strKeywords = new List<string>();
+                    foreach (var keyword in keywords)
+                    {
+                        strKeywords.Add(keyword.Value);
+                    }
+                    return strKeywords;
                 }
-                return strKeywords;
+                catch (Exception ex)
+                {
+                    List<string> strKeywords = new List<string>();
+                    strKeywords.Add("");
+                    return strKeywords;
+                }
             }
-            catch (Exception ex)
-            {
-                return "";
-            }
+            
         }
 
         public List<string> GetNameList()
         {
-            try
+            if (path.EndsWith(".tif"))
             {
-                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.Name);
-                List<string> strKeywords = new List<string>();
-                foreach (var keyword in keywords)
+                List<string> keywordsList = new List<string>();
+
+                try
                 {
-                    strKeywords.Add(keyword.Value);
+                    var directories = ImageMetadataReader.ReadMetadata(path);
+
+                    foreach (var directory in directories)
+                    {
+                        if (directory is IptcDirectory iptcDirectory)
+                        {
+                            if (iptcDirectory.ContainsTag(IptcDirectory.TagOriginalTransmissionReference))
+                            {
+                                var keywords = iptcDirectory.GetStringArray(IptcDirectory.TagOriginalTransmissionReference);
+
+                                if (keywords != null && keywords.Length > 0)
+                                {
+                                    keywordsList.AddRange(keywords);
+                                }
+                            }
+                        }
+                    }
                 }
-                return strKeywords;
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error reading metadata: {ex.Message}");
+                    keywordsList.Add("");
+                }
+                if (keywordsList.Count == 0)
+                {
+                    keywordsList.Add("");
+                }
+
+                return keywordsList;
+
             }
-            catch (Exception ex)
+            else
             {
-                List<string> strKeywords = new List<string>();
-                strKeywords.Add("");
-                return strKeywords;
+                try
+                {
+                    List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.OriginalTransmissionReference);
+                    List<string> strKeywords = new List<string>();
+                    foreach (var keyword in keywords)
+                    {
+                        strKeywords.Add(keyword.Value);
+                    }
+                    if (strKeywords.Count == 0)
+                    {
+                        strKeywords.Add("");
+                    }
+                    return strKeywords;
+                }
+                catch (Exception ex)
+                {
+                    List<string> strKeywords = new List<string>();
+                    strKeywords.Add("");
+                    if (strKeywords.Count == 0)
+                    {
+                        strKeywords.Add("");
+                    }
+                    return strKeywords;
+                }
             }
         }
 
-        public string GetLocation()
-        {
-            try
-            {
-                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.LocationName);
-                string strKeywords = "";
-                foreach (var keyword in keywords)
-                {
-                    strKeywords += " \"" + keyword.Value + "\"";
-                }
-                return strKeywords;
-            }
-            catch (Exception ex)
-            {
-                return "";
-            }
-        }
 
         public List<string> GetLocationList()
         {
-            try
+            if (path.EndsWith(".tif"))
             {
-                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.LocationName);
-                List<string> strKeywords = new List<string>();
-                foreach (var keyword in keywords)
+                List<string> keywordsList = new List<string>();
+
+                try
                 {
-                    strKeywords.Add(keyword.Value);
+                    var directories = ImageMetadataReader.ReadMetadata(path);
+
+                    foreach (var directory in directories)
+                    {
+                        if (directory is IptcDirectory iptcDirectory)
+                        {
+                            if (iptcDirectory.ContainsTag(IptcDirectory.TagCaption))
+                            {
+                                var keywords = iptcDirectory.GetStringArray(IptcDirectory.TagCaption);
+
+                                if (keywords != null && keywords.Length > 0)
+                                {
+                                    keywordsList.AddRange(keywords);
+                                }
+                            }
+                        }
+                    }
                 }
-                return strKeywords;
+                catch (Exception ex)
+                {
+                    keywordsList.Add("");
+                }
+                if (keywordsList.Count == 0)
+                {
+                    keywordsList.Add("");
+                }
+                return keywordsList;
+
             }
-            catch (Exception ex)
+            else
             {
-                List<string> strKeywords = new List<string>();
-                strKeywords.Add("");
-                return strKeywords;
+                try
+                {
+                    List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.Caption);
+                    List<string> strKeywords = new List<string>();
+                    foreach (var keyword in keywords)
+                    {
+                        strKeywords.Add(keyword.Value);
+                        //strKeywords.Add(keyword.Value);
+                    }
+                    if (strKeywords.Count == 0)
+                    {
+                        strKeywords.Add("");
+                    }
+                    return strKeywords;
+                }
+                catch (Exception ex)
+                {
+                    List<string> strKeywords = new List<string>();
+                    strKeywords.Add("");
+                    if (strKeywords.Count == 0)
+                    {
+                        strKeywords.Add("");
+                    }
+                    return strKeywords;
+                }
             }
         }
 
-        public string GetState()
+
+        public List<string> GetCaptionList()
         {
             try
             {
-                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.LocationName);
-                string strKeywords = "";
-                foreach (var keyword in keywords)
+                using (System.Drawing.Image image = System.Drawing.Image.FromFile(path))
                 {
-                    strKeywords += " \"" + keyword.Value + "\"";
+                    PropertyItem[] propertyItems = image.PropertyItems;
+
+                    List<string> coolList = new List<string>();
+                    foreach (PropertyItem propertyItem in propertyItems)
+                    {
+                        string metadata = Encoding.UTF7.GetString(propertyItem.Value);
+                        Debug.WriteLine($"Property ID: 0x{propertyItem.Id:X} - Type: {propertyItem.Type} - Value: {metadata}");
+                        coolList.Add($"Property ID: 0x{propertyItem.Id:X} - Type: {propertyItem.Type} - Value: {metadata}");
+                    }
+
+                    return coolList;
                 }
-                return strKeywords;
+            }
+            catch (Exception)
+            {
+                List<string> coolList = new List<string>();
+                return coolList;
+            }
+        }
+
+        public string GetCaption()
+        {
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    FileName = "exiftool",
+                    Arguments = $"{path} -caption",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    // Set the StandardOutputEncoding to UTF-8
+                    StandardOutputEncoding = Encoding.UTF8
+                };
+
+                using (Process process = new Process { StartInfo = startInfo })
+                {
+                    process.Start();
+                    string output = process.StandardOutput.ReadToEnd();
+                    string errorOutput = process.StandardError.ReadToEnd(); // Capture any error messages
+
+                    // Wait for the process to finish
+                    process.WaitForExit();
+
+                    if (!string.IsNullOrEmpty(errorOutput))
+                    {
+                        // Handle errors, if any
+                        throw new Exception($"Error executing exiftool: {errorOutput}");
+                    }
+
+                    return output;
+                }
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+
+        }
+
+        public string GetDate()
+        {
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    FileName = "exiftool",
+                    Arguments = $"{path} -datetime",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    // Set the StandardOutputEncoding to UTF-8
+                    StandardOutputEncoding = Encoding.UTF8
+                };
+
+                using (Process process = new Process { StartInfo = startInfo })
+                {
+                    process.Start();
+                    string output = process.StandardOutput.ReadToEnd();
+                    string errorOutput = process.StandardError.ReadToEnd(); // Capture any error messages
+
+                    // Wait for the process to finish
+                    process.WaitForExit();
+
+                    if (!string.IsNullOrEmpty(errorOutput))
+                    {
+                        // Handle errors, if any
+                        throw new Exception($"Error executing exiftool: {errorOutput}");
+                    }
+                    Debug.WriteLine(output);
+                    output = output.Replace("Date Time                       :", "");
+                    output = output.Replace("\n","");
+                    return output;
+                }
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+
+        }
+
+        public string GetNotes()
+        {
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    FileName = "exiftool",
+                    Arguments = $"{path} -notes",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    // Set the StandardOutputEncoding to UTF-8
+                    StandardOutputEncoding = Encoding.UTF8
+                };
+
+                using (Process process = new Process { StartInfo = startInfo })
+                {
+                    process.Start();
+                    string output = process.StandardOutput.ReadToEnd();
+                    string errorOutput = process.StandardError.ReadToEnd(); // Capture any error messages
+
+                    // Wait for the process to finish
+                    process.WaitForExit();
+
+                    if (!string.IsNullOrEmpty(errorOutput))
+                    {
+                        // Handle errors, if any
+                        throw new Exception($"Error executing exiftool: {errorOutput}");
+                    }
+                    Debug.WriteLine(output);
+                    output = output.Replace("Notes                           :", "");
+                    return output;
+                }
             }
             catch (Exception ex)
             {
                 return "";
             }
+
         }
 
-        public List<string> GetStateList()
-        {
-            try
-            {
-                List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.LocationName);
-                List<string> strKeywords = new List<string>();
-                foreach (var keyword in keywords)
-                {
-                    strKeywords.Add(keyword.Value);
-                }
-                return strKeywords;
-            }
-            catch (Exception ex)
-            {
-                List<string> strKeywords = new List<string>();
-                strKeywords.Add("");
-                return strKeywords;
-            }
-        }
 
         public void Dispose()
         {
