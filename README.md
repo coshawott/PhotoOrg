@@ -1,2 +1,4 @@
 # PhotoOrg
-Image Management program with support for searching through images with IPTC metadata, written in C#
+Supported File Extensions: Tif, Jpeg, Jpg, Png, Gif
+
+Dependencies: Net Framework 7.0, ExifTool
