@@ -35,10 +35,10 @@ namespace PhotoOrg
             MetadataReader captionReader = new MetadataReader(path);
             Caption.Text = captionReader.GetCaption();
             Caption.Text = Caption.Text.Replace("Caption                         :", "");
-            Keywords.Text = $"Keywords: {GetKeywordString(captionReader)}";
+            Keywords.Text = $"People: {GetKeywordString(captionReader)}";
             Name.Text = $"Label: {captionReader.GetNameList()[0]}";
-            Categories.Text = $"Categories: {captionReader.GetLocationList()[0]}";
-            Date.Text = $"Date: {captionReader.GetDate()}";
+            Categories.Text = $"Location: {captionReader.GetLocationList()[0]}";
+            Date.Text = $"Date: ";
             Notes.Text = $"Notes: {captionReader.GetNotes()}";
         }
 
