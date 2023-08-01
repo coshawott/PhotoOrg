@@ -36,7 +36,7 @@ namespace PhotoOrg
             Caption.Text = captionReader.GetCaption();
             Caption.Text = Caption.Text.Replace("Caption                         :", "");
             Keywords.Text = $"People: {GetKeywordString(captionReader)}";
-            Name.Text = $"Label: {captionReader.GetNameList()[0]}";
+            Name.Text = $"Date: {captionReader.GetNameList()[0]}";
             Categories.Text = $"Location: {captionReader.GetLocationList()[0]}";
             Date.Text = $"Date: ";
             Notes.Text = $"Notes: {captionReader.GetNotes()}";
