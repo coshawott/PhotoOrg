@@ -9,7 +9,7 @@
     <Grid Background="#2c2f36" RenderTransformOrigin="0.508,0.503">
 
         <ScrollViewer HorizontalAlignment="Left" Width="312"
-              VerticalScrollBarVisibility="Auto" Margin="0,33,0,0">
+              VerticalScrollBarVisibility="Hidden" Margin="0,33,0,0">
             <ListBox x:Name="ListBoxWithCheckboxes" Width="312" Height="394"
          >
                 <ListBox.ItemTemplate>
@@ -39,9 +39,9 @@
         </ScrollViewer>
 
         <ScrollViewer HorizontalAlignment="Left" Width="312"
-              VerticalScrollBarVisibility="Auto" Margin="320,222,0,0">
+              VerticalScrollBarVisibility="Auto" Margin="320,200,0,0">
             <ListBox x:Name="Locations" Width="312"
-         ScrollViewer.VerticalScrollBarVisibility="Auto">
+         ScrollViewer.VerticalScrollBarVisibility="Auto" Height="202">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
