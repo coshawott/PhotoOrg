@@ -295,7 +295,7 @@ namespace PhotoOrg
                         }
                     }
                     if (!termFound)
-                    {
+                    {            
                         allTermsFound = false;
                         break;
                     }
@@ -421,9 +421,28 @@ namespace PhotoOrg
                 }
             }
             return false;
-        }    
+        }
 
-
+        private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (NameSearchBar.Text.Length > 0)
+            {
+                List<ListBoxItem> newKeyItems = new List<ListBoxItem>();
+                foreach (ListBoxItem item in keyItems)
+                {
+                    if (item.ItemText.ToLower().Contains(NameSearchBar.Text.ToLower()))
+                    {
+                        ListBoxItem lbI = new ListBoxItem { IsSelected = false, ItemText = item.ItemText };
+                        newKeyItems.Add(lbI);
+                    }
+                }
+                ListBoxWithCheckboxes.ItemsSource = newKeyItems;
+            }
+            else
+            {
+                ListBoxWithCheckboxes.ItemsSource = keyItems;
+            }
+        }
     }
 
 
