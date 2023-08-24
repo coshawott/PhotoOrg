@@ -5,61 +5,173 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PhotoOrg"
         mc:Ignorable="d"
-        Title="AdvanceSearch" Height="450" Width="800" ResizeMode="NoResize">
+        Title="AdvanceSearch" Height="500" Width="800" ResizeMode="NoResize">
     <Grid Background="#2c2f36" RenderTransformOrigin="0.508,0.503">
-
-        <ScrollViewer HorizontalAlignment="Left" Width="312"
+        <TabControl>
+            <!-- Tab 1 -->
+            <TabItem Header="And">
+                <Grid Background="#2c2f36">
+                    <!-- ListBoxes -->
+                    <ScrollViewer HorizontalAlignment="Left" Width="312"
               VerticalScrollBarVisibility="Hidden" Margin="0,33,0,0">
-            <ListBox x:Name="ListBoxWithCheckboxes" Width="312" Height="394"
+                        <ListBox x:Name="ListBoxWithCheckboxes" Width="312" Height="394"
          >
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding IsSelected}" />
-                            <TextBlock Text="{Binding ItemText}" Margin="5,0,0,0" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </ScrollViewer>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox IsChecked="{Binding IsSelected}" />
+                                        <TextBlock Text="{Binding ItemText}" Margin="5,0,0,0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
 
-        <ScrollViewer HorizontalAlignment="Left" Width="312"
+                    <ScrollViewer HorizontalAlignment="Left" Width="312"
               VerticalScrollBarVisibility="Auto" Margin="320,0,0,217">
-            <ListBox x:Name="Names" Width="312"
+                        <ListBox x:Name="Names" Width="312"
          ScrollViewer.VerticalScrollBarVisibility="Auto">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding IsSelected}" />
-                            <TextBlock Text="{Binding ItemText}" Margin="5,0,0,0" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </ScrollViewer>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox IsChecked="{Binding IsSelected}" />
+                                        <TextBlock Text="{Binding ItemText}" Margin="5,0,0,0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
 
-        <ScrollViewer HorizontalAlignment="Left" Width="312"
-              VerticalScrollBarVisibility="Auto" Margin="320,200,0,0">
-            <ListBox x:Name="Locations" Width="312"
+                    <ScrollViewer HorizontalAlignment="Left" Width="312"
+              VerticalScrollBarVisibility="Auto" Margin="320,217,0,0">
+                        <ListBox x:Name="Locations" Width="312"
+         ScrollViewer.VerticalScrollBarVisibility="Auto" Height="201" >
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox IsChecked="{Binding IsSelected}" />
+                                        <TextBlock Text="{Binding ItemText}" Margin="5,0,0,0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+                    <TextBox x:Name="NameSearchBar" TextWrapping="Wrap" Text="" Margin="0,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="312" TextChanged="TextBox_TextChanged"/>
+                </Grid>
+            </TabItem>
+
+            <!-- Tab 2 -->
+            <TabItem Header="Or">
+                <Grid Background="#2c2f36">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <!-- ListBoxes (same as in Tab 1) -->
+                    <ScrollViewer HorizontalAlignment="Left" Width="312"
+              VerticalScrollBarVisibility="Hidden" Margin="0,33,0,0">
+                        <ListBox x:Name="ListBoxWithCheckboxes2" Width="312" Height="394"
+         >
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox IsChecked="{Binding IsSelected}" />
+                                        <TextBlock Text="{Binding ItemText}" Margin="5,0,0,0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+
+                    <ScrollViewer HorizontalAlignment="Left" Width="312"
+              VerticalScrollBarVisibility="Auto" Margin="320,0,0,217">
+                        <ListBox x:Name="Names2" Width="312"
+         ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox IsChecked="{Binding IsSelected}" />
+                                        <TextBlock Text="{Binding ItemText}" Margin="5,0,0,0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+
+                    <ScrollViewer HorizontalAlignment="Left" Width="312"
+              VerticalScrollBarVisibility="Auto" Margin="320,217,0,0">
+                        <ListBox x:Name="Locations2" Width="312"
          ScrollViewer.VerticalScrollBarVisibility="Auto" Height="202">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding IsSelected}" />
-                            <TextBlock Text="{Binding ItemText}" Margin="5,0,0,0" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </ScrollViewer>
-        <Button Content="Search" Width="40" Height="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Click="Search_Click"/>
-        <ComboBox x:Name="BooleanSearch" HorizontalAlignment="Left" Margin="647,357,0,0" VerticalAlignment="Top" Width="143" IsReadOnly="True" SelectedIndex="0">
-            <ComboBoxItem x:Name = "AND" Content="AND"/>
-            <ComboBoxItem x:Name = "OR" Content="OR"/>
-            <ComboBoxItem x:Name = "NOT" Content="NOT"/>
-        </ComboBox>
-        <TextBox x:Name ="NameSearchBar" TextWrapping="Wrap" Text="" Margin="0,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="312" TextChanged="TextBox_TextChanged"/>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox IsChecked="{Binding IsSelected}" />
+                                        <TextBlock Text="{Binding ItemText}" Margin="5,0,0,0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+                    <TextBox x:Name="NameSearchBar2" TextWrapping="Wrap" Text="" Margin="0,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="312" TextChanged="TextBox_TextChanged2"/>
+                </Grid>
+            </TabItem>
 
+            <!-- Tab 3 -->
+            <TabItem Header="Not">
+                <Grid Background="#2c2f36">
+                    <!-- ListBoxes -->
+                    <ScrollViewer HorizontalAlignment="Left" Width="312"
+              VerticalScrollBarVisibility="Hidden" Margin="0,33,0,0">
+                        <ListBox x:Name="ListBoxWithCheckboxes3" Width="312" Height="394"
+         >
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox IsChecked="{Binding IsSelected}" />
+                                        <TextBlock Text="{Binding ItemText}" Margin="5,0,0,0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+
+                    <ScrollViewer HorizontalAlignment="Left" Width="312"
+              VerticalScrollBarVisibility="Auto" Margin="320,0,0,217">
+                        <ListBox x:Name="Names3" Width="312"
+         ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox IsChecked="{Binding IsSelected}" />
+                                        <TextBlock Text="{Binding ItemText}" Margin="5,0,0,0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+
+                    <ScrollViewer HorizontalAlignment="Left" Width="312"
+              VerticalScrollBarVisibility="Auto" Margin="320,217,0,0">
+                        <ListBox x:Name="Locations3" Width="312"
+         ScrollViewer.VerticalScrollBarVisibility="Auto" Height="202">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox IsChecked="{Binding IsSelected}" />
+                                        <TextBlock Text="{Binding ItemText}" Margin="5,0,0,0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+                    <TextBox x:Name="NameSearchBar3" TextWrapping="Wrap" Text="" Margin="0,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="312" TextChanged="TextBox_TextChanged3"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+
+
+        <!-- Common UI elements for both tabs -->
+        <Button Content="Search" Width="40" Height="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Click="Search_Click"/>
 
     </Grid>
 </Window>

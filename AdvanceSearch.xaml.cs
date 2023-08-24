@@ -11,6 +11,12 @@ namespace PhotoOrg
         List<ListBoxItem> keyItems = new List<ListBoxItem>();
         List<ListBoxItem> locationItems = new List<ListBoxItem>();
         List<ListBoxItem> nameItems = new List<ListBoxItem>();
+        List<ListBoxItem> keyItems2 = new List<ListBoxItem>();
+        List<ListBoxItem> locationItems2 = new List<ListBoxItem>();
+        List<ListBoxItem> nameItems2 = new List<ListBoxItem>();
+        List<ListBoxItem> keyItems3 = new List<ListBoxItem>();
+        List<ListBoxItem> locationItems3 = new List<ListBoxItem>();
+        List<ListBoxItem> nameItems3 = new List<ListBoxItem>();
         private List<List<List<string>>> searchData = new List<List<List<string>>>();
         List<string> keyData = new List<string>();
         List<string> locationData = new List<string>();
@@ -45,27 +51,45 @@ namespace PhotoOrg
             {
                 Debug.WriteLine(item);
                 ListBoxItem lbI = new ListBoxItem { IsSelected = false, ItemText = item };
+                ListBoxItem lbI2 = new ListBoxItem { IsSelected = false, ItemText = item };
+                ListBoxItem lbI3 = new ListBoxItem { IsSelected = false, ItemText = item };
                 keyItems.Add(lbI);
+                keyItems2.Add(lbI2);
+                keyItems3.Add(lbI3);
             }
             ListBoxWithCheckboxes.ItemsSource = keyItems;
+            ListBoxWithCheckboxes2.ItemsSource = keyItems2;
+            ListBoxWithCheckboxes3.ItemsSource = keyItems3;
 
             locationData = catalogLocations(searchData);
             foreach (string item in locationData)
             {
                 Debug.WriteLine(item);
                 ListBoxItem lbI = new ListBoxItem { IsSelected = false, ItemText = item };
+                ListBoxItem lbI2 = new ListBoxItem { IsSelected = false, ItemText = item };
+                ListBoxItem lbI3 = new ListBoxItem { IsSelected = false, ItemText = item };
                 locationItems.Add(lbI);
+                locationItems2.Add(lbI2);
+                locationItems3.Add(lbI3);
             }
             Locations.ItemsSource = locationItems;
+            Locations2.ItemsSource = locationItems2;
+            Locations3.ItemsSource = locationItems3;
 
             nameData = catalogNames(searchData);
             foreach (string item in nameData)
             {
                 Debug.WriteLine(item);
                 ListBoxItem lbI = new ListBoxItem { IsSelected = false, ItemText = item };
+                ListBoxItem lbI2 = new ListBoxItem { IsSelected = false, ItemText = item };
+                ListBoxItem lbI3 = new ListBoxItem { IsSelected = false, ItemText = item };
                 nameItems.Add(lbI);
+                nameItems2.Add(lbI2);
+                nameItems3.Add(lbI3);
             }
             Names.ItemsSource = nameItems;
+            Names2.ItemsSource = nameItems2;
+            Names3.ItemsSource = nameItems3;
         }
 
         private void Search_Click(object sender, RoutedEventArgs e)
@@ -73,6 +97,12 @@ namespace PhotoOrg
             List<string> keywords = new List<string>();
             List<string> names = new List<string>();
             List<string> locations = new List<string>();
+            List<string> keywords2 = new List<string>();
+            List<string> names2 = new List<string>();
+            List<string> locations2 = new List<string>();
+            List<string> keywords3 = new List<string>();
+            List<string> names3 = new List<string>();
+            List<string> locations3 = new List<string>();
             foreach (ListBoxItem lbI in ListBoxWithCheckboxes.ItemsSource)
             {
                 if (lbI.IsSelected)
@@ -95,8 +125,56 @@ namespace PhotoOrg
                     names.Add(lbI.ItemText);
                 }
             }
+            foreach (ListBoxItem lbI in ListBoxWithCheckboxes2.ItemsSource)
+            {
+                if (lbI.IsSelected)
+                {
+                    Debug.WriteLine($"Object Name for keywords 2: {lbI.ItemText}");
+                    keywords2.Add(lbI.ItemText);
+                }
+            }
+            foreach (ListBoxItem lbI in Locations2.ItemsSource)
+            {
+                if (lbI.IsSelected)
+                {
+                    locations2.Add(lbI.ItemText);
+                }
+            }
+            foreach (ListBoxItem lbI in Names2.ItemsSource)
+            {
+                if (lbI.IsSelected)
+                {
+                    
+                    names2.Add(lbI.ItemText);
+                }
+            }
+            foreach (ListBoxItem lbI in ListBoxWithCheckboxes3.ItemsSource)
+            {
+                if (lbI.IsSelected)
+                {
+                    keywords3.Add(lbI.ItemText);
+                }
+            }
+            foreach (ListBoxItem lbI in Locations3.ItemsSource)
+            {
+                if (lbI.IsSelected)
+                {
+                    locations3.Add(lbI.ItemText);
+                }
+            }
+            foreach (ListBoxItem lbI in Names3.ItemsSource)
+            {
+                if (lbI.IsSelected)
+                {
+                    Debug.WriteLine($"Object Name: {lbI.ItemText}");
+                    names3.Add(lbI.ItemText);
+                }
+            }
+
+
+
             //AND Search
-            if (BooleanSearch.SelectedIndex == 0)
+            if (names.Count > 0 || keywords.Count > 0 || locations.Count > 0)
             {
                 if (keywords.Count > 0 && names.Count > 0 && locations.Count > 0)
                 {
@@ -104,7 +182,7 @@ namespace PhotoOrg
                     List<string> namePaths = SearchNames(names);
                     List<string> locationsPaths = SearchLocations(locations);
                     GLOBALS.advPhotos = keyPaths.Intersect(namePaths).ToList().Intersect(locationsPaths).ToList();
-                    Debug.WriteLine($"Printed from AdvanceSearch:{GLOBALS.advPhotos.Count}");
+                    
                 }
                 else if (keywords.Count > 0 && names.Count > 0)
                 {
@@ -139,34 +217,53 @@ namespace PhotoOrg
                     List<string> namePaths = SearchNames(names);
                     GLOBALS.advPhotos = namePaths;
                 }
-                Close();
+                //Close();
             }
             //OR Search
-            else if (BooleanSearch.SelectedIndex == 1)
+            Debug.WriteLine($"or keywords length {keywords2.Count}");
+            if (names2.Count > 0 || keywords2.Count > 0 || locations2.Count > 0)
             {
-                List<string> keyPaths = OrSearchKeywords(keywords);
-                List<string> namePaths = OrSearchNames(names);
-                List<string> locationPaths = OrSearchLocations(locations);
-                GLOBALS.advPhotos = keyPaths.Union(namePaths).ToList().Union(locationPaths).ToList();
-                Close();
+                List<string> keyPaths =  OrSearchKeywords(keywords2);
+                List<string> namePaths = OrSearchNames(names2);
+                List<string> locationPaths = OrSearchLocations(locations2);
+                Debug.WriteLine($"keypaths length {keyPaths.Count}");
+                List<string> erm = GLOBALS.advPhotos.Union(keyPaths.Union(namePaths).ToList().Union(locationPaths).ToList()).ToList();
+                Debug.WriteLine($"unionized length {erm.Count}");
+                GLOBALS.advPhotos = erm;
+                //Close();
             }
             //NOT Search
-            else
+            if (names3.Count > 0 || keywords3.Count > 0 || locations3.Count > 0)
             {
-                List<string> keyPaths = OrSearchKeywords(keywords);
-                List<string> namePaths = OrSearchNames(names);
-                List<string> locationPaths = OrSearchLocations(locations);
+                List<string> keyPaths = OrSearchKeywords(keywords3);
+                List<string> namePaths = OrSearchNames(names3);
+                List<string> locationPaths = OrSearchLocations(locations3);
                 List<string> removeThese = keyPaths.Union(namePaths).ToList().Union(locationPaths).ToList();
-                //Gets all file paths
-                List<string> allPaths = new List<string>();
-                foreach (List<string> paths in searchData[0])
+                if (GLOBALS.advPhotos.Count > 0)
                 {
-                    allPaths.Add(paths[0]);
+                    foreach (string item in removeThese)
+                    {
+                        GLOBALS.advPhotos.RemoveAll(item => removeThese.Contains(item));
+                    }
                 }
-                allPaths.RemoveAll(item => removeThese.Contains(item));
-                GLOBALS.advPhotos = allPaths;
-                Close();
+                else
+                {
+                    List<string> allPaths = new List<string>();
+                    foreach (List<string> paths in searchData[0])
+                    {
+                        allPaths.Add(paths[0]);
+                    }
+                    foreach (string item in removeThese)
+                    {
+                        allPaths.RemoveAll(item => removeThese.Contains(item));
+                    }
+                    GLOBALS.advPhotos = allPaths;
+                }
+                
+                
+                //Close();
             }
+            Close();
         }
 
         private List<string> catalogKeywords(List<List<List<string>>> list)
@@ -443,6 +540,49 @@ namespace PhotoOrg
                 ListBoxWithCheckboxes.ItemsSource = keyItems;
             }
         }
+
+        private void TextBox_TextChanged2(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (NameSearchBar2.Text.Length > 0)
+            {
+                List<ListBoxItem> newKeyItems = new List<ListBoxItem>();
+                foreach (ListBoxItem item in keyItems)
+                {
+                    if (item.ItemText.ToLower().Contains(NameSearchBar2.Text.ToLower()))
+                    {
+                        ListBoxItem lbI = new ListBoxItem { IsSelected = false, ItemText = item.ItemText };
+                        newKeyItems.Add(lbI);
+                    }
+                }
+                ListBoxWithCheckboxes2.ItemsSource = newKeyItems;
+            }
+            else
+            {
+                ListBoxWithCheckboxes2.ItemsSource = keyItems2;
+            }
+        }
+
+        private void TextBox_TextChanged3(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (NameSearchBar3.Text.Length > 0)
+            {
+                List<ListBoxItem> newKeyItems = new List<ListBoxItem>();
+                foreach (ListBoxItem item in keyItems)
+                {
+                    if (item.ItemText.ToLower().Contains(NameSearchBar3.Text.ToLower()))
+                    {
+                        ListBoxItem lbI = new ListBoxItem { IsSelected = false, ItemText = item.ItemText };
+                        newKeyItems.Add(lbI);
+                    }
+                }
+                ListBoxWithCheckboxes3.ItemsSource = newKeyItems;
+            }
+            else
+            {
+                ListBoxWithCheckboxes3.ItemsSource = keyItems3;
+            }
+        }
+
     }
 
 
