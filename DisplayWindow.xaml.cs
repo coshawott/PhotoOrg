@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace PhotoOrg
 {
@@ -34,12 +26,11 @@ namespace PhotoOrg
             DispWindow.Title = path;
             MetadataReader captionReader = new MetadataReader(path);
             Caption.Text = captionReader.GetCaption();
-            Caption.Text = Caption.Text.Replace("Caption                         :", "");
-            Keywords.Text = $"People: {GetKeywordString(captionReader)}";
-            Name.Text = $"Date: {captionReader.GetNameList()[0]}";
+            Keywords.Text = $"Names: {GetKeywordString(captionReader)}";
+            Name.Text = $"Events: {captionReader.GetNameList()[0]}";
             Categories.Text = $"Location: {captionReader.GetLocationList()[0]}";
-            Date.Text = $"Date: ";
-            Notes.Text = $"Notes: {captionReader.GetNotes()}";
+            Date.Text = $"Date: {captionReader.GetDate()}";
+            Notes.Text = $"Label: {captionReader.GetNotes()}";
         }
 
         private string GetKeywordString(MetadataReader reader)
