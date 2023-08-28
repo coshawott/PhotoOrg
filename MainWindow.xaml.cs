@@ -482,8 +482,17 @@ namespace PhotoOrg
         private List<List<List<string>>> dateSortAll (List<List<List<string>>> oldList)
         {
             List<int> added = new List<int>();
-            List<List<string>> newList = new List<List<string>> ();
-            List<List<string>> addToTheEnd = new List<List<string>>();
+            List<List<List<string>>> newList = new List<List<List<string>>> ();
+            List<List<List<string>>> addToTheEnd = new List<List<List<string>>>();
+            for (int i = 0; i < 7; i++)
+            {
+                List<List<string>> layer2List = new List<List<string>>();
+                List<List<string>> layer2List2 = new List<List<string>>();
+                newList.Add(layer2List);
+                addToTheEnd.Add(layer2List2);
+                Debug.WriteLine($"oldList{i} length {oldList[i].Count}");
+            }
+            Debug.WriteLine($"newList length {newList.Count}");
             List<List<List<string>>> endList = oldList;
             int whileLoops = 0;
             while (added.Count < oldList[6].Count)
@@ -497,37 +506,73 @@ namespace PhotoOrg
                     {
                         if (int.TryParse(oldList[6][i][0], out int number))
                         {
-                            if (newList.Count == 0)
+                            Debug.WriteLine($"String to number Succesful: {number}");
+                            if (newList[0].Count == 0)
                             {
-                                newList.Add(oldList[6][i]);
+                                newList[0].Add(oldList[0][i]);
+                                newList[1].Add(oldList[1][i]);
+                                //newList[2].Add(oldList[2][i]);
+                                //newList[3].Add(oldList[3][i]);
+                                newList[4].Add(oldList[4][i]);
+                                newList[5].Add(oldList[5][i]);
+                                newList[6].Add(oldList[6][i]);
                                 added.Add(i);
                                 Debug.WriteLine($"photo {i} will not be checked again");
                             }
-                            else if (number <= int.Parse(newList[0][0]))
+                            else if (number <= int.Parse(newList[6][0][0]))
                             {
                                 added.Add(i);
-                                newList.Insert(0,oldList[6][i]);
+                                newList[0].Insert(0, oldList[0][i]);
+                                newList[1].Insert(0, oldList[1][i]);
+                                //newList[2].Insert(0, oldList[2][i]);
+                                //newList[3].Insert(0, oldList[3][i]);
+                                newList[4].Insert(0, oldList[4][i]);
+                                newList[5].Insert(0, oldList[5][i]);
+                                newList[6].Insert(0, oldList[6][i]);
                                 Debug.WriteLine($"photo {i} will not be checked again");
                             }
-                            else if (number >= int.Parse(newList[newList.Count - 1][0]))
+                            else //if (number >= int.Parse(newList[6][newList.Count - 1][0]))
                             {
                                 added.Add(i);
-                                newList.Add(oldList[6][i]);
+                                newList[0].Add(oldList[0][i]);
+                                newList[1].Add(oldList[1][i]);
+                                //newList[2].Add(oldList[2][i]);
+                                //newList[3].Add(oldList[3][i]);
+                                newList[4].Add(oldList[4][i]);
+                                newList[5].Add(oldList[5][i]);
+                                newList[6].Add(oldList[6][i]);
                                 Debug.WriteLine($"photo {i} will not be checked again");
                             }
 
                         }
                         else
                         {
-                            addToTheEnd.Add(oldList[6][i]);
+                            addToTheEnd[0].Add(oldList[0][i]);
+                            addToTheEnd[1].Add(oldList[1][i]);
+                            //addToTheEnd[2].Add(oldList[2][i]);
+                            //[3].Add(oldList[3][i]);
+                            addToTheEnd[4].Add(oldList[4][i]);
+                            addToTheEnd[5].Add(oldList[5][i]);
+                            addToTheEnd[6].Add(oldList[6][i]);
                             added.Add(i);
                             Debug.WriteLine($"photo {i} will not be checked again");
                         }
                     }
                 }
             }
-            newList.AddRange(addToTheEnd);
-            endList[6] = newList;
+            newList[0].AddRange(addToTheEnd[0]);
+            newList[1].AddRange(addToTheEnd[1]);
+            newList[2].AddRange(addToTheEnd[2]);
+            newList[3].AddRange(addToTheEnd[3]);
+            newList[4].AddRange(addToTheEnd[4]);
+            newList[5].AddRange(addToTheEnd[5]);
+            newList[6].AddRange(addToTheEnd[6]);
+            for (int i = 0; i < addToTheEnd.Count; i++)
+            {
+                Debug.WriteLine($"addToTheEnd {i} length: {addToTheEnd[i].Count}");
+                Debug.WriteLine($"newList {i} length: {newList[i].Count}");
+            }
+            endList = newList;
             return endList;
 
         }
