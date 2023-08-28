@@ -66,6 +66,7 @@ namespace PhotoOrg
                 Properties.Settings.Default.FolderLocation = dialog.FileName;
                 Folder_Text.Text = Properties.Settings.Default.FolderLocation;
                 List<string> photos = GetPhotos(Properties.Settings.Default.FolderLocation);
+                GLOBALS.advPhotos = photos;
                 searchProperties = catalogValues(photos);
                 Debug.WriteLine("sorting");
                 searchProperties = dateSortAll(searchProperties);

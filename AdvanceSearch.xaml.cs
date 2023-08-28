@@ -246,7 +246,7 @@ namespace PhotoOrg
                         GLOBALS.advPhotos.RemoveAll(item => removeThese.Contains(item));
                     }
                 }
-                else
+                else if(names.Count == 0 && keywords.Count == 0 && locations.Count == 0 && names2.Count == 0 && keywords2.Count == 0 && locations2.Count == 0)
                 {
                     List<string> allPaths = new List<string>();
                     foreach (List<string> paths in searchData[0])
