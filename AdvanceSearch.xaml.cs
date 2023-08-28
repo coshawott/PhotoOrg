@@ -217,7 +217,7 @@ namespace PhotoOrg
                     List<string> namePaths = SearchNames(names);
                     GLOBALS.advPhotos = namePaths;
                 }
-                //Close();
+               
             }
             //OR Search
             Debug.WriteLine($"or keywords length {keywords2.Count}");
@@ -230,7 +230,7 @@ namespace PhotoOrg
                 List<string> erm = GLOBALS.advPhotos.Union(keyPaths.Union(namePaths).ToList().Union(locationPaths).ToList()).ToList();
                 Debug.WriteLine($"unionized length {erm.Count}");
                 GLOBALS.advPhotos = erm;
-                //Close();
+                
             }
             //NOT Search
             if (names3.Count > 0 || keywords3.Count > 0 || locations3.Count > 0)
@@ -261,7 +261,17 @@ namespace PhotoOrg
                 }
                 
                 
-                //Close();
+               
+            }
+            if (names.Count == 0 && keywords.Count == 0 && locations.Count == 0 && names2.Count == 0 && keywords2.Count == 0 && locations2.Count == 0 && names3.Count == 0 && keywords3.Count == 0 && locations3.Count == 0) 
+            {
+                List<string> allPaths = new List<string>();
+                foreach (List<string> paths in searchData[0])
+                {
+                    allPaths.Add(paths[0]);
+                }
+                GLOBALS.advPhotos = allPaths;
+
             }
             Close();
         }

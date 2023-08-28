@@ -400,6 +400,74 @@ namespace PhotoOrg
 
         }
 
+        public List<string> GetDateList()
+        {
+            if (path.EndsWith(".tif"))
+            {
+                List<string> keywordsList = new List<string>();
+
+                try
+                {
+                    var directories = ImageMetadataReader.ReadMetadata(path);
+
+                    foreach (var directory in directories)
+                    {
+                        if (directory is IptcDirectory iptcDirectory)
+                        {
+                            if (iptcDirectory.ContainsTag(IptcDirectory.TagFixtureId))
+                            {
+                                var keywords = iptcDirectory.GetStringArray(IptcDirectory.TagFixtureId);
+
+                                if (keywords != null && keywords.Length > 0)
+                                {
+                                    keywordsList.AddRange(keywords);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    keywordsList.Add("");
+                }
+                if (keywordsList.Count == 0)
+                {
+                    keywordsList.Add("");
+                }
+                return keywordsList;
+
+            }
+            else
+            {
+                try
+                {
+                    List<IptcValue> keywords = image.Metadata.IptcProfile.GetValues(IptcTag.FixtureIdentifier);
+                    List<string> strKeywords = new List<string>();
+                    foreach (var keyword in keywords)
+                    {
+                        strKeywords.Add(keyword.Value);
+                        //strKeywords.Add(keyword.Value);
+                    }
+                    if (strKeywords.Count == 0)
+                    {
+                        strKeywords.Add("");
+                    }
+                    return strKeywords;
+                }
+                catch (Exception ex)
+                {
+                    List<string> strKeywords = new List<string>();
+                    strKeywords.Add("");
+                    if (strKeywords.Count == 0)
+                    {
+                        strKeywords.Add("");
+                    }
+                    return strKeywords;
+                }
+            }
+
+        }
+
         public string GetNotes()
         {
             if (path.EndsWith(".tif"))

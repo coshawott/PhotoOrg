@@ -67,10 +67,16 @@ namespace PhotoOrg
                 Folder_Text.Text = Properties.Settings.Default.FolderLocation;
                 List<string> photos = GetPhotos(Properties.Settings.Default.FolderLocation);
                 searchProperties = catalogValues(photos);
+                Debug.WriteLine("sorting");
+                searchProperties = dateSortAll(searchProperties);
                 autofillText = catalogSearchTerms(searchProperties);
                 currentPageIndex = 0;
                 Page_Number.Text = (currentPageIndex + 1 + "/" + ((photos.Count / PageSize) + 1));
-                InitThumbnails(photos);
+                List<string> newPhotos = new List<string>();
+                foreach (List<string> list in searchProperties[0]) {
+                    newPhotos.Add(list[0]);
+                }
+                InitThumbnails(newPhotos);
                 NoPics.Visibility = Visibility.Hidden;
                 Loading.Visibility = Visibility.Hidden;
                 if (photos.Count < 0)
@@ -292,7 +298,7 @@ namespace PhotoOrg
             List<List<string>> countryVals = new List<List<string>>();
             List<List<string>> nameVals = new List<List<string>>();
             List<List<string>> locationVals = new List<List<string>>();
-            List<List<string>> captionVals = new List<List<string>>();
+            List<List<string>> dateVals = new List<List<string>>();
             foreach (string photo in photos)
             {
                 List<string> photoList = new List<string>();
@@ -302,7 +308,7 @@ namespace PhotoOrg
                 keywordVals.Add(tagRead.GetKeywordList());
                 nameVals.Add(tagRead.GetNameList());
                 locationVals.Add(tagRead.GetLocationList());
-                //captionVals.Add(tagRead.GetCaptionList());
+                dateVals.Add(tagRead.GetDateList());
                 tagRead.Dispose();
 
             }
@@ -312,7 +318,7 @@ namespace PhotoOrg
             endVals.Add(countryVals);
             endVals.Add(nameVals);
             endVals.Add(locationVals);
-            ///endVals.Add(captionVals);
+            endVals.Add(dateVals);
             return endVals;
         }
 
@@ -470,6 +476,59 @@ namespace PhotoOrg
             }
 
             InitThumbnails(GLOBALS.advPhotos);
+
+        }
+
+        private List<List<List<string>>> dateSortAll (List<List<List<string>>> oldList)
+        {
+            List<int> added = new List<int>();
+            List<List<string>> newList = new List<List<string>> ();
+            List<List<string>> addToTheEnd = new List<List<string>>();
+            List<List<List<string>>> endList = oldList;
+            int whileLoops = 0;
+            while (added.Count < oldList[6].Count)
+            {
+                whileLoops++;
+                Debug.WriteLine($"time through the while loop: {whileLoops}");
+                for (int i = 0; i < oldList[6].Count; i++) 
+                {
+                    
+                    if (!added.Contains(i))
+                    {
+                        if (int.TryParse(oldList[6][i][0], out int number))
+                        {
+                            if (newList.Count == 0)
+                            {
+                                newList.Add(oldList[6][i]);
+                                added.Add(i);
+                                Debug.WriteLine($"photo {i} will not be checked again");
+                            }
+                            else if (number <= int.Parse(newList[0][0]))
+                            {
+                                added.Add(i);
+                                newList.Insert(0,oldList[6][i]);
+                                Debug.WriteLine($"photo {i} will not be checked again");
+                            }
+                            else if (number >= int.Parse(newList[newList.Count - 1][0]))
+                            {
+                                added.Add(i);
+                                newList.Add(oldList[6][i]);
+                                Debug.WriteLine($"photo {i} will not be checked again");
+                            }
+
+                        }
+                        else
+                        {
+                            addToTheEnd.Add(oldList[6][i]);
+                            added.Add(i);
+                            Debug.WriteLine($"photo {i} will not be checked again");
+                        }
+                    }
+                }
+            }
+            newList.AddRange(addToTheEnd);
+            endList[6] = newList;
+            return endList;
 
         }
     }
