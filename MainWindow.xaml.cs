@@ -11,10 +11,15 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Threading;
+using System.Windows.Threading;
+using System.Windows.Media.Imaging;
+
 namespace PhotoOrg
 {
     public partial class MainWindow : Window
     {
+        private DispatcherTimer timer;
         public ObservableCollection<Photo> Photos { get; set; }
         private int PageSize = 50;
         private int currentPageIndex = 0;
@@ -138,7 +143,17 @@ namespace PhotoOrg
             Photos.Clear();
             for (int i = startIndex; i < endIndex; i++)
             {
-                Photos.Add(new Photo { Path = newPhotoPaths[i] });
+                Photo photo = new Photo();
+                photo.Path = photoPaths[i];
+                photo.image = new BitmapImage();
+                using (FileStream fs = new FileStream(photo.Path, FileMode.Open, FileAccess.Read))
+                {
+                    photo.image.BeginInit();
+                    photo.image.CacheOption = BitmapCacheOption.OnLoad;
+                    photo.image.StreamSource = fs;
+                    photo.image.EndInit();
+                }
+                Photos.Add(photo);
             }
         }
 
@@ -146,6 +161,7 @@ namespace PhotoOrg
         public class Photo
         {
             public string? Path { get; set; }
+            public BitmapImage? image { get; set; }
 
             public string GetPath()
             {
@@ -466,6 +482,23 @@ namespace PhotoOrg
             return searchTerms;
         }
 
+        private void StartDelay()
+        {
+            // Start the timer
+            timer.Start();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            // Code to execute after the 3-second delay
+            GC.Collect(0);
+            InitThumbnails(GLOBALS.advPhotos);
+            // Enable user interaction again (optional)
+            
+            // Stop the timer
+            timer.Stop();
+        }
+
         private void AdvSearch_Menu_Click(object sender, RoutedEventArgs e)
         {
             AdvanceSearch advanceSearch = new AdvanceSearch(searchProperties);
@@ -475,8 +508,22 @@ namespace PhotoOrg
             {
                 Debug.WriteLine("Printed from MainWindow:" + path);
             }
+            List<string> emptyList = new List<string>();
+            InitThumbnails(emptyList); 
+            GC.Collect(0);
 
+            /*for (int i = 0; i < 1; i++)
+            {
+                timer = new DispatcherTimer();
+                timer.Interval = TimeSpan.FromSeconds(1); // Set the delay duration to 3 seconds
+                timer.Tick += Timer_Tick;
+                StartDelay();
+            }*/
             InitThumbnails(GLOBALS.advPhotos);
+
+
+
+
 
         }
 
