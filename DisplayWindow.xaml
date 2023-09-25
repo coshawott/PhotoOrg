@@ -31,6 +31,8 @@
         <Image x:Name="DispImage" Grid.Row="0" Grid.Column="0" Stretch="Uniform" />
 
         <StackPanel Grid.Row="0" Grid.Column="1" Margin="10">
+            <TextBlock x:Name="Filename" TextWrapping="Wrap" Text="Loading" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left" />
+            <TextBlock TextWrapping="Wrap" Text="" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <TextBlock x:Name="Keywords" TextWrapping="Wrap" Text="Loading" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left" />
             <TextBlock TextWrapping="Wrap" Text="" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <TextBlock x:Name="Name" TextWrapping="Wrap" Text="Loading" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
@@ -40,6 +42,8 @@
             <TextBlock x:Name="Date" TextWrapping="NoWrap" Text="Loading" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <TextBlock TextWrapping="Wrap" Text="" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <TextBlock x:Name="Notes" TextWrapping="Wrap" Text="Loading" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <TextBlock TextWrapping="Wrap" Text="" Foreground="White" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <Button Content="Close" VerticalAlignment="Bottom" Height="39" Click="Close_Click" Width="100" HorizontalAlignment="Left"/>
         </StackPanel>
 
         <!-- GridSplitter to adjust the width between metadata and additional metadata/empty -->

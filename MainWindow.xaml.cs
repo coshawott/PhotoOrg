@@ -79,7 +79,8 @@ namespace PhotoOrg
                 currentPageIndex = 0;
                 Page_Number.Text = (currentPageIndex + 1 + "/" + ((photos.Count / PageSize) + 1));
                 List<string> newPhotos = new List<string>();
-                foreach (List<string> list in searchProperties[0]) {
+                foreach (List<string> list in searchProperties[0])
+                {
                     newPhotos.Add(list[0]);
                 }
                 InitThumbnails(newPhotos);
@@ -356,7 +357,7 @@ namespace PhotoOrg
             dispWindow.ShowDialog();
         }
 
-        
+
 
         public static T GetChildOfType<T>(DependencyObject depObj) where T : DependencyObject
         {
@@ -482,23 +483,6 @@ namespace PhotoOrg
             return searchTerms;
         }
 
-        private void StartDelay()
-        {
-            // Start the timer
-            timer.Start();
-        }
-
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            // Code to execute after the 3-second delay
-            GC.Collect(0);
-            InitThumbnails(GLOBALS.advPhotos);
-            // Enable user interaction again (optional)
-            
-            // Stop the timer
-            timer.Stop();
-        }
-
         private void AdvSearch_Menu_Click(object sender, RoutedEventArgs e)
         {
             AdvanceSearch advanceSearch = new AdvanceSearch(searchProperties);
@@ -508,17 +492,6 @@ namespace PhotoOrg
             {
                 Debug.WriteLine("Printed from MainWindow:" + path);
             }
-            List<string> emptyList = new List<string>();
-            InitThumbnails(emptyList); 
-            GC.Collect(0);
-
-            /*for (int i = 0; i < 1; i++)
-            {
-                timer = new DispatcherTimer();
-                timer.Interval = TimeSpan.FromSeconds(1); // Set the delay duration to 3 seconds
-                timer.Tick += Timer_Tick;
-                StartDelay();
-            }*/
             InitThumbnails(GLOBALS.advPhotos);
 
 
@@ -527,102 +500,54 @@ namespace PhotoOrg
 
         }
 
-        private List<List<List<string>>> dateSortAll (List<List<List<string>>> oldList)
+        private List<List<List<string>>> dateSortAll(List<List<List<string>>> oldList)
         {
-            List<int> added = new List<int>();
-            List<List<List<string>>> newList = new List<List<List<string>>> ();
-            List<List<List<string>>> addToTheEnd = new List<List<List<string>>>();
-            for (int i = 0; i < 7; i++)
+            List<(int number, int index)> parsedNumbers = new List<(int, int)>();
+
+            for (int i = 0; i < oldList[6].Count; i++)
+            {
+                if (!int.TryParse(oldList[6][i][0], out int number))
+                {
+                    Debug.WriteLine($"Unable to parse a number from oldList[6][{i}]");
+                    parsedNumbers.Add((99999, i));
+                    continue; // Skip this item
+                }
+
+                parsedNumbers.Add((number, i));
+            }
+
+            var sortedIndices = parsedNumbers.OrderBy(item => item.number).Select(item => item.index).ToList();
+
+            List<List<List<string>>> sortedList = new List<List<List<string>>>();
+
+            // Create sublists in sortedList to match the structure of oldList
+            for (int i = 0; i < oldList.Count; i++)
             {
                 List<List<string>> layer2List = new List<List<string>>();
-                List<List<string>> layer2List2 = new List<List<string>>();
-                newList.Add(layer2List);
-                addToTheEnd.Add(layer2List2);
-                Debug.WriteLine($"oldList{i} length {oldList[i].Count}");
+                sortedList.Add(layer2List);
             }
-            Debug.WriteLine($"newList length {newList.Count}");
-            List<List<List<string>>> endList = oldList;
-            int whileLoops = 0;
-            while (added.Count < oldList[6].Count)
-            {
-                whileLoops++;
-                Debug.WriteLine($"time through the while loop: {whileLoops}");
-                for (int i = 0; i < oldList[6].Count; i++) 
-                {
-                    
-                    if (!added.Contains(i))
-                    {
-                        if (int.TryParse(oldList[6][i][0], out int number))
-                        {
-                            Debug.WriteLine($"String to number Succesful: {number}");
-                            if (newList[0].Count == 0)
-                            {
-                                newList[0].Add(oldList[0][i]);
-                                newList[1].Add(oldList[1][i]);
-                                //newList[2].Add(oldList[2][i]);
-                                //newList[3].Add(oldList[3][i]);
-                                newList[4].Add(oldList[4][i]);
-                                newList[5].Add(oldList[5][i]);
-                                newList[6].Add(oldList[6][i]);
-                                added.Add(i);
-                                Debug.WriteLine($"photo {i} will not be checked again");
-                            }
-                            else if (number <= int.Parse(newList[6][0][0]))
-                            {
-                                added.Add(i);
-                                newList[0].Insert(0, oldList[0][i]);
-                                newList[1].Insert(0, oldList[1][i]);
-                                //newList[2].Insert(0, oldList[2][i]);
-                                //newList[3].Insert(0, oldList[3][i]);
-                                newList[4].Insert(0, oldList[4][i]);
-                                newList[5].Insert(0, oldList[5][i]);
-                                newList[6].Insert(0, oldList[6][i]);
-                                Debug.WriteLine($"photo {i} will not be checked again");
-                            }
-                            else //if (number >= int.Parse(newList[6][newList.Count - 1][0]))
-                            {
-                                added.Add(i);
-                                newList[0].Add(oldList[0][i]);
-                                newList[1].Add(oldList[1][i]);
-                                //newList[2].Add(oldList[2][i]);
-                                //newList[3].Add(oldList[3][i]);
-                                newList[4].Add(oldList[4][i]);
-                                newList[5].Add(oldList[5][i]);
-                                newList[6].Add(oldList[6][i]);
-                                Debug.WriteLine($"photo {i} will not be checked again");
-                            }
 
-                        }
-                        else
-                        {
-                            addToTheEnd[0].Add(oldList[0][i]);
-                            addToTheEnd[1].Add(oldList[1][i]);
-                            //addToTheEnd[2].Add(oldList[2][i]);
-                            //[3].Add(oldList[3][i]);
-                            addToTheEnd[4].Add(oldList[4][i]);
-                            addToTheEnd[5].Add(oldList[5][i]);
-                            addToTheEnd[6].Add(oldList[6][i]);
-                            added.Add(i);
-                            Debug.WriteLine($"photo {i} will not be checked again");
-                        }
+            foreach (int index in sortedIndices)
+            {
+                for (int i = 0; i < oldList.Count; i++)
+                {
+                    // Ensure that the index is within the bounds of oldList[i]
+                    if (index < oldList[i].Count)
+                    {
+                        sortedList[i].Add(oldList[i][index]);
+                    }
+                    else
+                    {
+                        // Handle the case where the index is out of range
+                        Debug.WriteLine($"Index {index} is out of range for oldList[{i}].");
                     }
                 }
             }
-            newList[0].AddRange(addToTheEnd[0]);
-            newList[1].AddRange(addToTheEnd[1]);
-            newList[2].AddRange(addToTheEnd[2]);
-            newList[3].AddRange(addToTheEnd[3]);
-            newList[4].AddRange(addToTheEnd[4]);
-            newList[5].AddRange(addToTheEnd[5]);
-            newList[6].AddRange(addToTheEnd[6]);
-            for (int i = 0; i < addToTheEnd.Count; i++)
-            {
-                Debug.WriteLine($"addToTheEnd {i} length: {addToTheEnd[i].Count}");
-                Debug.WriteLine($"newList {i} length: {newList[i].Count}");
-            }
-            endList = newList;
-            return endList;
 
+            return sortedList;
         }
+
+
+
     }
 }

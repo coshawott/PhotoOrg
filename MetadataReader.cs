@@ -62,11 +62,17 @@ namespace PhotoOrg
                             if (iptcDirectory.ContainsTag(IptcDirectory.TagKeywords))
                             {
                                 var keywords = iptcDirectory.GetStringArray(IptcDirectory.TagKeywords);
+                                int i = 0;
+                                foreach (string keyword in keywords) {
+                                    Debug.WriteLine(keyword + i);
+                                    i++;
+                                }
 
                                 if (keywords != null && keywords.Length > 0)
                                 {
                                     keywordsList.AddRange(keywords);
                                 }
+                                break;
                             }
                         }
                     }
@@ -360,11 +366,11 @@ namespace PhotoOrg
                 }
                 catch (Exception ex)
                 {
-                    keywordsList.Add("");
+                    keywordsList.Add("99999");
                 }
                 if (keywordsList.Count == 0)
                 {
-                    keywordsList.Add("");
+                    keywordsList.Add("99999");
                 }
                 return keywordsList[0];
 
@@ -382,17 +388,17 @@ namespace PhotoOrg
                     }
                     if (strKeywords.Count == 0)
                     {
-                        strKeywords.Add("");
+                        strKeywords.Add("99999");
                     }
                     return strKeywords[0];
                 }
                 catch (Exception ex)
                 {
                     List<string> strKeywords = new List<string>();
-                    strKeywords.Add("");
+                    strKeywords.Add("99999");
                     if (strKeywords.Count == 0)
                     {
-                        strKeywords.Add("");
+                        strKeywords.Add("99999");
                     }
                     return strKeywords[0];
                 }
