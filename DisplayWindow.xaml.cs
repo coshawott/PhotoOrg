@@ -29,11 +29,11 @@ namespace PhotoOrg
             Caption.Text = captionReader.GetCaption();
             Keywords.Text = $"Names: {GetKeywordString(captionReader)}";
             StringBuilder sb = new StringBuilder(Keywords.Text);
-            if (Keywords.Text.Length / 150 >= 1)
+            if (Keywords.Text.Length / 100 >= 1)
             {
-                for (int i = 1; i <= Keywords.Text.Length/150;i++)
+                for (int i = 1; i <= Keywords.Text.Length/100;i++)
                 {
-                    sb.Insert(150 * i, "\n");
+                    sb.Insert(100 * i, "\n");
                     Keywords.Text = sb.ToString();
                 }
             }
