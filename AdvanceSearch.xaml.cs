@@ -221,6 +221,10 @@ namespace PhotoOrg
             }
             //OR Search
             Debug.WriteLine($"or keywords length {keywords2.Count}");
+            if (names.Count == 0 && keywords.Count == 0 && locations.Count == 0)
+            {
+                GLOBALS.advPhotos.Clear();
+            }
             if (names2.Count > 0 || keywords2.Count > 0 || locations2.Count > 0)
             {
                 List<string> keyPaths =  OrSearchKeywords(keywords2);
